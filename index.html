@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Webassembly demo</title>
+  </head>
+  <body>
+    <div id="app"></div>
+    <div class="side-by-side">
+      <div>
+        <div id="dropZoneJs" class="dropzone">
+          <p>Drag a file to this Drop Zone for JS processing</p>
+        </div>
+        <h2>Log</h2>
+        <div id="logContainerJs" class="log-container"></div>
+        <h2>Image</h2>
+        <div id="cloudContainerJs" class="cloud-container"></div>
+      </div>
+      <div>
+        <div id="dropZoneWasm" class="dropzone">
+          <p>Drag a file to this Drop Zone for WASM processing</p>
+        </div>
+        <h2>Log</h2>
+        <div id="logContainerWasm" class="log-container"></div>
+        <h2>Image</h2>
+        <div id="cloudContainerWasm" class="cloud-container"></div>
+      </div>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

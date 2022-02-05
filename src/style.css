@@ -1,0 +1,71 @@
+/* color scheme: https://coolors.co/227c9d-17c3b2-ffcb77-fef9ef-fe6d73 */
+
+:root {
+  --color-cg-blue: #227c9d;
+  --light-sea-green: #17c3b2;
+  --maximum-yellow-red: #ffcb77;
+  --floral-white: #fef9ef;
+  --floral-white-shadow: rgba(12, 10, 10, 0.4);
+  --light-coral: #fe6d73;
+}
+
+html {
+  color: var(--floral-white);
+  background-color: #1e1e24;
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  padding: 0 8rem;
+}
+
+p {
+  margin: 0;
+}
+
+h1 {
+  margin: 1rem 0;
+}
+
+h2 {
+  margin: 1rem 0;
+}
+
+#app {
+  text-align: center;
+  margin-top: 60px;
+}
+
+.dropzone {
+  border-radius: 5px;
+  background: radial-gradient(
+    circle,
+    var(--light-sea-green) 0%,
+    var(--color-cg-blue) 100%
+  );
+  box-shadow: 2px 2px 10px 0 var(--floral-white-shadow);
+  padding: 1rem;
+  width: 10rem;
+  text-align: center;
+  color: var(--floral-white);
+}
+
+.side-by-side {
+  display: flex;
+  flex-direction: row;
+  column-gap: 2rem;
+}
+
+.side-by-side > div {
+  width: 50%;
+}
+
+.log-container {
+  color: var(--floral-white);
+  padding: 1rem;
+  border: 1px solid var(--floral-white);
+  border-radius: 5px;
+  margin-top: 1rem;
+}

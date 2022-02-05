@@ -1,0 +1,9 @@
+/target
+node_modules
+.DS_Store
+dist
+dist-ssr
+*.local
+wasm-pkg
+data.json
+wasm/*

@@ -1,0 +1,29 @@
+{
+  "name": "wordcloud-test",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "dev": "vite",
+    "preview": "vite preview",
+    "build": "tsc && vite build",
+    "lint": "prettier --check **/*.{ts,css,html,json,md}",
+    "build:wasm": "wasm-pack build wasm --target web --out-dir ../wasm-pkg -- --color=always"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "d3": "7.3.0",
+    "d3-cloud": "1.2.5",
+    "d3-scale": "4.0.2",
+    "typescript": "4.5.5",
+    "vite": "2.7.13"
+  },
+  "devDependencies": {
+    "@types/d3": "7.1.0",
+    "@types/d3-cloud": "1.2.5",
+    "cpy-cli": "3.1.1",
+    "prettier": "2.5.1"
+  }
+}
