@@ -5,6 +5,7 @@ use regex::Regex;
 use serde::{Deserialize, Serialize};
 
 use crate::bindings::{log_to_screen_wasm, WordWithImportance};
+use crate::preprocessing::process_raw_word;
 
 #[derive(Serialize, Deserialize)]
 struct RawRow {
@@ -66,13 +67,20 @@ fn process_raw_row(regex: &Regex, raw_row: RawRow) -> Row {
     let words: Vec<String> = raw_row
         .description
         .split(' ')
-        .filter_map(|word| {
-            if let Some(found_match) = regex.find(word) {
-                return Some(String::from(found_match.as_str()));
-            }
-            None
-        })
+        .filter_map(process_raw_word)
         .collect();
+
+    // let words: Vec<String> = raw_row
+    //     .description
+    //     .split(' ')
+    //     .filter_map(|word| {
+    //         if let Some(found_match) = regex.find(word) {
+    //             return Some(String::from(found_match.as_str()));
+    //         }
+    //         None
+    //     })
+    //     .collect();
+
     Row { words }
 }
 
@@ -122,7 +130,7 @@ pub fn process(text: &str) -> Vec<WordWithImportance> {
     log_time("parsed data", start_time);
 
     log_to_screen_wasm("starting preprocessing");
-    let regex = Regex::new(r"([A-za-z-]+)").unwrap();
+    let regex = Regex::new(r"\p{L}+").unwrap();
     for row in &mut raw_rows {
         row.description.make_ascii_lowercase();
     }

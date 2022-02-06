@@ -74,7 +74,7 @@ function calculateInverseDocumentFrequencies(
 }
 
 function processRawRow(rawRow: RawRow): Row {
-  const wordRegex = /([A-za-z-]+)/;
+  const wordRegex = /\p{L}+/u;
   rawRow.description = rawRow.description.toLowerCase();
   const words = rawRow.description
     .split(" ")
@@ -121,11 +121,11 @@ export function processWithJS(text: string): WordWithImportance[] {
 
   logToScreenJs("parsing data");
   const rawRows = JSON.parse(text) as RawRow[];
-  logToScreenJs(`parsed data after ${performance.now() - startTime}ms.`);
+  logTime("parsed data", startTime);
 
   logToScreenJs("starting preprocessing");
   const rows = rawRows.map(processRawRow);
-  logToScreenJs(`preprocessed rows after ${performance.now() - startTime}ms.`);
+  logTime("preprocessed rows", startTime);
 
   logToScreenJs("building up statistics");
   const corpusWordMap: { [key in string]: CorpusWordStatistics } = {};
@@ -133,9 +133,7 @@ export function processWithJS(text: string): WordWithImportance[] {
     buildUpRowCorpusStatistics(corpusWordMap, index, row)
   );
   calculateInverseDocumentFrequencies(rows.length, corpusWordMap);
-  logToScreenJs(
-    `built up statistics after ${performance.now() - startTime}ms.`
-  );
+  logTime("built up statistics", startTime);
 
   return logSample(10_000, 1, rows, corpusWordMap, startTime);
 }
@@ -157,7 +155,7 @@ function logSample(
     buildUpRowDocumentStatistics(documentWordMap, row)
   );
   calculateTFIDF(documentWordMap, corpusWordMap);
-  logToScreenJs(`built up TFIDF map after ${performance.now() - startTime}ms.`);
+  logTime("built up TFIDF map", startTime);
   const topWordCount = 100;
   const mostRelevantWords = Object.entries(documentWordMap)
     // @ts-ignore
@@ -168,4 +166,9 @@ function logSample(
     word: word,
     tf_idf: statistics.tfIdf ?? 0.0,
   }));
+}
+
+function logTime(step: string, startTime: number) {
+  const duration = performance.now() - startTime;
+  logToScreenJs(`${step} after ${duration.toFixed(2)}ms.`);
 }
