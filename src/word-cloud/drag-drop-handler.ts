@@ -17,10 +17,11 @@ export async function dropHandler(ev: DragEvent, origin: "Js" | "Wasm") {
           const text = await file.text();
           console.log(origin);
           let resultWords;
+          const startTime = Date.now();
           if (origin === "Js") {
-            resultWords = processWithJS(text);
+            resultWords = processWithJS(text, startTime);
           } else if (origin === "Wasm") {
-            resultWords = process_with_wasm(text);
+            resultWords = process_with_wasm(text, startTime);
           }
           drawCloud(resultWords, origin);
         }

@@ -122,9 +122,7 @@ fn calculate_tf_idf(word_map: &mut DocumentWordMap, corpus_map: &CorpusWordMap) 
     }
 }
 
-pub fn process(text: &str) -> Vec<WordWithImportance> {
-    let start_time = js_sys::Date::now();
-
+pub fn process(text: &str, start_time: f64) -> Vec<WordWithImportance> {
     log_to_screen_wasm("parsing data");
     let mut raw_rows: Vec<RawRow> = serde_json::from_str(text).unwrap();
     log_time("parsed data", start_time);

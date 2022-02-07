@@ -116,9 +116,7 @@ function calculateTFIDF(wordMap: DocumentWordMap, corpusMap: CorpusWordMap) {
   }
 }
 
-export function processWithJS(text: string): WordWithImportance[] {
-  const startTime = performance.now();
-
+export function processWithJS(text: string, startTime: number): WordWithImportance[] {
   logToScreenJs("parsing data");
   const rawRows = JSON.parse(text) as RawRow[];
   logTime("parsed data", startTime);

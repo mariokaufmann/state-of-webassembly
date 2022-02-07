@@ -8,7 +8,7 @@ mod preprocessing;
 mod processing;
 
 #[wasm_bindgen]
-pub fn process_with_wasm(text: &str) -> JsValue {
+pub fn process_with_wasm(text: &str, start_time: f64) -> JsValue {
     console_error_panic_hook::set_once();
-    JsValue::from_serde(&processing::process(text)).unwrap()
+    JsValue::from_serde(&processing::process(text, start_time)).unwrap()
 }
