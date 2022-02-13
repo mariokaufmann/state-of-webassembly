@@ -8,6 +8,9 @@
   <body>
     <div id="title">
       <h1>Web assembly demo</h1>
+      <div id="dropZone" class="dropzone">
+        <p>Drag the data.json file to here for processing</p>
+      </div>
     </div>
     <div id="controls">
       <h2>Price range</h2>
@@ -42,18 +45,12 @@
     </div>
     <div class="side-by-side">
       <div>
-        <div id="dropZoneJs" class="dropzone">
-          <p>Drag the data.json file to here for JS processing</p>
-        </div>
         <h2>Log</h2>
         <div id="logContainerJs" class="log-container"></div>
         <h2>Image</h2>
         <div id="cloudContainerJs" class="cloud-container"></div>
       </div>
       <div>
-        <div id="dropZoneWasm" class="dropzone">
-          <p>Drag the data.json file to here for WASM processing</p>
-        </div>
         <h2>Log</h2>
         <div id="logContainerWasm" class="log-container"></div>
         <h2>Image</h2>

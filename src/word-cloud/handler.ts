@@ -5,7 +5,7 @@ import {
   process_with_wasm,
 } from "../../wasm-pkg/wordcloud_combined";
 
-export async function dropHandler(ev: DragEvent, origin: "Js" | "Wasm") {
+export async function dropHandler(ev: DragEvent) {
   console.log("file dropped");
 
   // Prevent default behavior (Prevent file from being opened)
@@ -19,12 +19,14 @@ export async function dropHandler(ev: DragEvent, origin: "Js" | "Wasm") {
         if (file) {
           const text = await file.text();
           console.log(origin);
-          const startTime = Date.now();
-          if (origin === "Js") {
-            processWithJS(text, startTime);
-          } else if (origin === "Wasm") {
-            process_with_wasm(text, startTime);
-          }
+          const startTimeJs = Date.now();
+          console.log("processing with JS");
+          processWithJS(text, startTimeJs);
+          console.log("done.");
+          const startTimeWasm = Date.now();
+          console.log("processing with WASM");
+          process_with_wasm(text, startTimeWasm);
+          console.log("done.");
         }
       }
     }

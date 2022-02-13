@@ -16,8 +16,7 @@ function query<E extends Element>(id: string): E {
 }
 
 // query elements
-const dropZoneJs = query<HTMLDivElement>("dropZoneJs");
-const dropZoneWasm = query<HTMLDivElement>("dropZoneWasm");
+const dropZone = query<HTMLDivElement>("dropZone");
 const minimumPriceInput = query<HTMLInputElement>("minimumPriceRangeInput");
 const minimumPriceDisplay = query<HTMLParagraphElement>("minimumPrice");
 const maximumPriceInput = query<HTMLInputElement>("maximumPriceRangeInput");
@@ -48,11 +47,8 @@ Object.keys(countryDatasets).forEach((key) => {
   };
 });
 
-dropZoneJs.ondrop = (event) => dropHandler(event, "Js");
-dropZoneJs.ondragover = dragOver;
-
-dropZoneWasm.ondrop = (event) => dropHandler(event, "Wasm");
-dropZoneWasm.ondragover = dragOver;
+dropZone.ondrop = (event) => dropHandler(event, "Js");
+dropZone.ondragover = dragOver;
 
 minimumPriceInput.onchange = (evt) => {
   const target = evt.target as HTMLInputElement;
