@@ -32,9 +32,3 @@ export const countryDatasets: { [key in string]: string[] } = {
   Oceania: ["Australia", "New Zealand"],
   Switzerland: ["Switzerland"],
 };
-
-/**
- * A list of words that we filter since they are not very interesting for demo purposes
- * (even though they are relevant in the TF-IDF sense).
- */
-export const denyList = ["walla", "half"];

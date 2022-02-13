@@ -47,7 +47,7 @@ Object.keys(countryDatasets).forEach((key) => {
   };
 });
 
-dropZone.ondrop = (event) => dropHandler(event, "Js");
+dropZone.ondrop = (event) => dropHandler(event);
 dropZone.ondragover = dragOver;
 
 minimumPriceInput.onchange = (evt) => {

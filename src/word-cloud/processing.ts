@@ -11,7 +11,6 @@
  */
 import { WordWithImportance } from "./bindings";
 import { clearScreenLogJs, logToScreenJs } from "../bindings";
-import { denyList } from "./data";
 
 interface RawRow {
   description: string;
@@ -87,7 +86,7 @@ function calculateInverseDocumentFrequencies(
 
 function wordShouldBeUsed(word: string | undefined): boolean {
   if (word) {
-    return word.length > 1 && !denyList.includes(word);
+    return word.length > 1 && !word.includes("-");
   }
   return false;
 }
@@ -97,14 +96,14 @@ function processRawRow(rawRow: RawRow): Row {
   rawRow.description = rawRow.description.toLowerCase();
   const words = rawRow.description
     .split(" ")
+    .filter(wordShouldBeUsed)
     .map((word) => {
       let matches = word.toLowerCase().match(wordRegex);
       if (!matches) {
         return undefined;
       }
       return matches[0];
-    })
-    .filter(wordShouldBeUsed);
+    });
   return {
     words: words as string[],
     country: rawRow.country,
@@ -141,15 +140,18 @@ function calculateTFIDF(wordMap: DocumentWordMap, corpusMap: CorpusWordMap) {
 
 export function processWithJS(text: string, startTime: number) {
   logToScreenJs("parsing data");
-  const rawRows = JSON.parse(text) as RawRow[];
+  let rawRows = JSON.parse(text) as RawRow[];
   logTime("parsed data", startTime);
 
   logToScreenJs("starting preprocessing");
+  rawRows = rawRows.filter(
+    (rawRow) => rawRow.price !== null && rawRow.country !== null
+  );
   const rows = rawRows.map(processRawRow);
   logTime("preprocessed rows", startTime);
 
   logToScreenJs("building up statistics");
-  const corpusWordMap = {};
+  const corpusWordMap: CorpusWordMap = {};
   loadedData = { corpusWordMap, rows };
   rows.forEach((row: Row, index) =>
     buildUpRowCorpusStatistics(corpusWordMap, index, row)

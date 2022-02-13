@@ -19,11 +19,11 @@ export async function dropHandler(ev: DragEvent) {
         if (file) {
           const text = await file.text();
           console.log(origin);
-          const startTimeJs = Date.now();
+          const startTimeJs = performance.now();
           console.log("processing with JS");
           processWithJS(text, startTimeJs);
           console.log("done.");
-          const startTimeWasm = Date.now();
+          const startTimeWasm = performance.now();
           console.log("processing with WASM");
           process_with_wasm(text, startTimeWasm);
           console.log("done.");

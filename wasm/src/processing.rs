@@ -6,7 +6,7 @@ use lazy_static::lazy_static;
 use regex::Regex;
 use serde::{Deserialize, Serialize};
 
-use crate::bindings::{clear_screen_log_wasm, log_to_screen_wasm, WordWithImportance};
+use crate::bindings::{clear_screen_log_wasm, log, log_to_screen_wasm, WordWithImportance};
 use crate::preprocessing::process_raw_word;
 
 #[derive(Serialize, Deserialize)]
@@ -78,7 +78,7 @@ fn calculate_inverse_document_frequencies(
     }
 }
 
-fn process_raw_row(regex: &Regex, raw_row: RawRow) -> Row {
+fn process_raw_row(regex: &Regex, raw_row: RawRow) -> Option<Row> {
     let words: Vec<String> = raw_row
         .description
         .split(' ')
@@ -96,11 +96,17 @@ fn process_raw_row(regex: &Regex, raw_row: RawRow) -> Row {
     //     })
     //     .collect();
 
-    Row {
-        words,
-        country: raw_row.country.unwrap_or("".to_owned()),
-        price: raw_row.price.unwrap_or(0),
+    if let Some(country) = raw_row.country {
+        if let Some(price) = raw_row.price {
+            return Some(Row {
+                words,
+                country,
+                price,
+            });
+        }
     }
+
+    None
 }
 
 fn build_up_row_document_statistics(word_map: &mut DocumentWordMap, row: &Row) {
@@ -153,7 +159,7 @@ pub fn process(text: &str, start_time: f64) {
     }
     let rows: Vec<Row> = raw_rows
         .into_iter()
-        .map(|raw_row| process_raw_row(&regex, raw_row))
+        .filter_map(|raw_row| process_raw_row(&regex, raw_row))
         .collect();
     log_time("preprocessed rows", start_time);
 
@@ -234,9 +240,6 @@ fn row_matches_filter(row: &Row, min_price: u16, max_price: u16, countries: &[St
 }
 
 fn log_time(step: &str, start_time: f64) {
-    log_to_screen_wasm(&format!(
-        "{} after {}ms.",
-        step,
-        js_sys::Date::now() - start_time
-    ));
+    let end_time = web_sys::window().unwrap().performance().unwrap().now();
+    log_to_screen_wasm(&format!("{} after {}ms.", step, end_time - start_time));
 }

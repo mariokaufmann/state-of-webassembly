@@ -28,7 +28,7 @@ function draw(words, origin: string) {
       return d.size + "px";
     })
     .style("font-family", "Impact")
-    .style("fill", () => colors[Math.floor(Math.random() * colors.length)])
+    .style("fill", (_d, i) => colors[i % colors.length])
     .attr("text-anchor", "middle")
     .attr("transform", function (d) {
       // @ts-ignore
