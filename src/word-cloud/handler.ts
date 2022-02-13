@@ -1,6 +1,9 @@
-import { process_with_wasm } from "../../wasm-pkg";
-import { processWithJS } from "./processing";
+import { analyzeSampleWithJs, processWithJS } from "./processing";
 import { drawCloud } from "./cloud";
+import {
+  analyze_sample_with_wasm,
+  process_with_wasm,
+} from "../../wasm-pkg/wordcloud_combined";
 
 export async function dropHandler(ev: DragEvent, origin: "Js" | "Wasm") {
   console.log("file dropped");
@@ -16,18 +19,40 @@ export async function dropHandler(ev: DragEvent, origin: "Js" | "Wasm") {
         if (file) {
           const text = await file.text();
           console.log(origin);
-          let resultWords;
           const startTime = Date.now();
           if (origin === "Js") {
-            resultWords = processWithJS(text, startTime);
+            processWithJS(text, startTime);
           } else if (origin === "Wasm") {
-            resultWords = process_with_wasm(text, startTime);
+            process_with_wasm(text, startTime);
           }
-          drawCloud(resultWords, origin);
         }
       }
     }
   }
+}
+
+export function drawCloudFromSample(
+  minPrice: number,
+  maxPrice: number,
+  countries: string[]
+) {
+  // analyze with JS
+  const resultWordsJs = analyzeSampleWithJs(
+    minPrice,
+    maxPrice,
+    countries,
+    performance.now()
+  );
+  drawCloud(resultWordsJs, "Js");
+
+  // analyze with WASM
+  const resultWordsWasm = analyze_sample_with_wasm(
+    minPrice,
+    maxPrice,
+    countries,
+    performance.now()
+  );
+  drawCloud(resultWordsWasm, "Wasm");
 }
 
 export function dragOver(ev: DragEvent) {

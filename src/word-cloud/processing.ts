@@ -10,14 +10,19 @@
  * cited here: https://en.wikipedia.org/wiki/Tf%E2%80%93id
  */
 import { WordWithImportance } from "./bindings";
-import { logToScreenJs } from "../bindings";
+import { clearScreenLogJs, logToScreenJs } from "../bindings";
+import { denyList } from "./data";
 
 interface RawRow {
   description: string;
+  country: string;
+  price: number;
 }
 
 interface Row {
   words: string[];
+  country: string;
+  price: number;
 }
 
 interface CorpusWordStatistics {
@@ -38,6 +43,13 @@ interface DocumentWordStatistics {
 interface DocumentWordMap {
   [key: string]: DocumentWordStatistics;
 }
+
+interface LoadedData {
+  corpusWordMap: CorpusWordMap;
+  rows: Row[];
+}
+
+let loadedData: LoadedData | null = null;
 
 function buildUpRowCorpusStatistics(
   wordMap: CorpusWordMap,
@@ -73,6 +85,13 @@ function calculateInverseDocumentFrequencies(
   }
 }
 
+function wordShouldBeUsed(word: string | undefined): boolean {
+  if (word) {
+    return word.length > 1 && !denyList.includes(word);
+  }
+  return false;
+}
+
 function processRawRow(rawRow: RawRow): Row {
   const wordRegex = /\p{L}+/u;
   rawRow.description = rawRow.description.toLowerCase();
@@ -85,8 +104,12 @@ function processRawRow(rawRow: RawRow): Row {
       }
       return matches[0];
     })
-    .filter((word) => word !== undefined);
-  return { words: words as string[] };
+    .filter(wordShouldBeUsed);
+  return {
+    words: words as string[],
+    country: rawRow.country,
+    price: rawRow.price,
+  };
 }
 
 function buildUpRowDocumentStatistics(wordMap: DocumentWordMap, row: Row) {
@@ -116,7 +139,7 @@ function calculateTFIDF(wordMap: DocumentWordMap, corpusMap: CorpusWordMap) {
   }
 }
 
-export function processWithJS(text: string, startTime: number): WordWithImportance[] {
+export function processWithJS(text: string, startTime: number) {
   logToScreenJs("parsing data");
   const rawRows = JSON.parse(text) as RawRow[];
   logTime("parsed data", startTime);
@@ -126,28 +149,34 @@ export function processWithJS(text: string, startTime: number): WordWithImportan
   logTime("preprocessed rows", startTime);
 
   logToScreenJs("building up statistics");
-  const corpusWordMap: { [key in string]: CorpusWordStatistics } = {};
+  const corpusWordMap = {};
+  loadedData = { corpusWordMap, rows };
   rows.forEach((row: Row, index) =>
     buildUpRowCorpusStatistics(corpusWordMap, index, row)
   );
   calculateInverseDocumentFrequencies(rows.length, corpusWordMap);
   logTime("built up statistics", startTime);
-
-  return logSample(10_000, 1, rows, corpusWordMap, startTime);
 }
 
-function logSample(
-  startIndex: number,
-  sampleIndex: number,
-  rows: Row[],
-  corpusWordMap: CorpusWordMap,
+export function analyzeSampleWithJs(
+  minPrice: number,
+  maxPrice: number,
+  countries: string[],
   startTime: number
 ): WordWithImportance[] {
-  const sampleSize = 1000;
-  logToScreenJs(
-    `building up term frequencies for document sample ${sampleIndex}`
+  if (!loadedData) {
+    throw new Error("No data was loaded!");
+  }
+  clearScreenLogJs();
+
+  const corpusWordMap = loadedData.corpusWordMap;
+  const rows = loadedData.rows;
+
+  logToScreenJs("building up term frequencies for review sample.");
+  const documentRows = rows.filter((row) =>
+    rowMatchesFilter(row, minPrice, maxPrice, countries)
   );
-  const documentRows = rows.slice(startIndex, startIndex + sampleSize);
+  logToScreenJs(`found ${documentRows.length} reviews.`);
   let documentWordMap: DocumentWordMap = {};
   documentRows.forEach((row: Row) =>
     buildUpRowDocumentStatistics(documentWordMap, row)
@@ -164,6 +193,19 @@ function logSample(
     word: word,
     tf_idf: statistics.tfIdf ?? 0.0,
   }));
+}
+
+function rowMatchesFilter(
+  row: Row,
+  minPrice: number,
+  maxPrice: number,
+  countries: string[]
+): boolean {
+  return (
+    row.price >= minPrice &&
+    row.price <= maxPrice &&
+    countries.includes(row.country)
+  );
 }
 
 function logTime(step: string, startTime: number) {

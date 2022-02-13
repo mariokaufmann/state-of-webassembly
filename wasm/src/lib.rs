@@ -8,7 +8,21 @@ mod preprocessing;
 mod processing;
 
 #[wasm_bindgen]
-pub fn process_with_wasm(text: &str, start_time: f64) -> JsValue {
+pub fn process_with_wasm(text: &str, start_time: f64) {
     console_error_panic_hook::set_once();
-    JsValue::from_serde(&processing::process(text, start_time)).unwrap()
+    processing::process(text, start_time)
+}
+
+#[wasm_bindgen]
+pub fn analyze_sample_with_wasm(
+    min_price: u16,
+    max_price: u16,
+    countries: JsValue,
+    start_time: f64,
+) -> JsValue {
+    let countries: Vec<String> = countries.into_serde().unwrap();
+    JsValue::from_serde(&processing::analyze_sample(
+        min_price, max_price, &countries, start_time,
+    ))
+    .unwrap()
 }

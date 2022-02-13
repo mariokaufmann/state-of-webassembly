@@ -23,7 +23,9 @@ pub fn process_raw_word(word: &str) -> Option<String> {
                 return None;
             }
 
-            if first_alphabetic_start_index.is_some() {
+            if first_alphabetic_start_index.is_some()
+                && last_alphabetic_exclusive_end_index.is_none()
+            {
                 last_alphabetic_exclusive_end_index = Some(slice_index);
             }
         }
@@ -58,5 +60,7 @@ mod tests {
         assert_eq!(process_raw_word("1993"), None);
         assert_eq!(process_raw_word("()"), None);
         assert_eq!(process_raw_word("12$"), None);
+
+        assert_eq!(process_raw_word("now–2025"), Some("now".to_owned()));
     }
 }

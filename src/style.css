@@ -30,12 +30,50 @@ h1 {
 }
 
 h2 {
-  margin: 1rem 0;
+  margin: 0.5rem 0;
 }
 
-#app {
+#title {
   text-align: center;
-  margin-top: 60px;
+  margin-top: 1rem;
+}
+
+#controls {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#price-controls {
+  display: flex;
+  justify-content: center;
+}
+
+.price-container {
+  display: flex;
+  align-items: center;
+  margin-right: 4rem;
+}
+
+.price-container > * {
+  margin-right: 1rem;
+}
+
+#countriesContainer {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  row-gap: 0.25rem;
+}
+
+.country-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.country-label {
+  margin: 0 1rem 0 0.5rem;
 }
 
 .dropzone {
@@ -56,6 +94,7 @@ h2 {
   display: flex;
   flex-direction: row;
   column-gap: 2rem;
+  margin-top: 2rem;
 }
 
 .side-by-side > div {

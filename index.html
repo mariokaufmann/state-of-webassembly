@@ -6,11 +6,44 @@
     <title>Webassembly demo</title>
   </head>
   <body>
-    <div id="app"></div>
+    <div id="title">
+      <h1>Web assembly demo</h1>
+    </div>
+    <div id="controls">
+      <h2>Price range</h2>
+      <div id="price-controls">
+        <div class="price-container">
+          <label for="minimumPriceRangeInput">Minimum price</label>
+          <input
+            id="minimumPriceRangeInput"
+            type="range"
+            min="0"
+            max="3300"
+            step="10"
+            value="0"
+          />
+          <p id="minimumPrice">0</p>
+        </div>
+        <div class="price-container">
+          <label for="maximumPriceRangeInput">Maximum price</label>
+          <input
+            id="maximumPriceRangeInput"
+            type="range"
+            min="0"
+            max="3300"
+            step="10"
+            value="3300"
+          />
+          <p id="maximumPrice">3300</p>
+        </div>
+      </div>
+      <h2>Country filter</h2>
+      <div id="countriesContainer"></div>
+    </div>
     <div class="side-by-side">
       <div>
         <div id="dropZoneJs" class="dropzone">
-          <p>Drag a file to this Drop Zone for JS processing</p>
+          <p>Drag the data.json file to here for JS processing</p>
         </div>
         <h2>Log</h2>
         <div id="logContainerJs" class="log-container"></div>
@@ -19,7 +52,7 @@
       </div>
       <div>
         <div id="dropZoneWasm" class="dropzone">
-          <p>Drag a file to this Drop Zone for WASM processing</p>
+          <p>Drag the data.json file to here for WASM processing</p>
         </div>
         <h2>Log</h2>
         <div id="logContainerWasm" class="log-container"></div>

@@ -10,6 +10,7 @@ extern "C" {
 #[wasm_bindgen(raw_module = "../src/bindings")]
 extern "C" {
     pub fn log_to_screen_wasm(text: &str);
+    pub fn clear_screen_log_wasm();
 }
 
 #[derive(Serialize, Deserialize)]

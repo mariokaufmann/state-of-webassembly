@@ -1,19 +1,25 @@
 use std::cmp::Ordering;
 use std::collections::{HashMap, HashSet};
+use std::sync::Mutex;
 
+use lazy_static::lazy_static;
 use regex::Regex;
 use serde::{Deserialize, Serialize};
 
-use crate::bindings::{log_to_screen_wasm, WordWithImportance};
+use crate::bindings::{clear_screen_log_wasm, log_to_screen_wasm, WordWithImportance};
 use crate::preprocessing::process_raw_word;
 
 #[derive(Serialize, Deserialize)]
 struct RawRow {
     description: String,
+    country: Option<String>,
+    price: Option<u16>,
 }
 
 struct Row {
     words: Vec<String>,
+    country: String,
+    price: u16,
 }
 
 struct CorpusWordStatistics {
@@ -29,7 +35,16 @@ struct DocumentWordStatistics {
     tf_idf: Option<f64>,
 }
 
+struct LoadedData {
+    corpus_word_map: CorpusWordMap,
+    rows: Vec<Row>,
+}
+
 type DocumentWordMap = HashMap<String, DocumentWordStatistics>;
+
+lazy_static! {
+    static ref LOADED_DATA: Mutex<Option<LoadedData>> = Mutex::new(None);
+}
 
 fn build_up_row_corpus_statistics(word_map: &mut CorpusWordMap, document_index: u32, row: &Row) {
     for word in &row.words {
@@ -81,7 +96,11 @@ fn process_raw_row(regex: &Regex, raw_row: RawRow) -> Row {
     //     })
     //     .collect();
 
-    Row { words }
+    Row {
+        words,
+        country: raw_row.country.unwrap_or("".to_owned()),
+        price: raw_row.price.unwrap_or(0),
+    }
 }
 
 fn build_up_row_document_statistics(word_map: &mut DocumentWordMap, row: &Row) {
@@ -122,7 +141,7 @@ fn calculate_tf_idf(word_map: &mut DocumentWordMap, corpus_map: &CorpusWordMap) 
     }
 }
 
-pub fn process(text: &str, start_time: f64) -> Vec<WordWithImportance> {
+pub fn process(text: &str, start_time: f64) {
     log_to_screen_wasm("parsing data");
     let mut raw_rows: Vec<RawRow> = serde_json::from_str(text).unwrap();
     log_time("parsed data", start_time);
@@ -146,49 +165,72 @@ pub fn process(text: &str, start_time: f64) -> Vec<WordWithImportance> {
     calculate_inverse_document_frequencies(rows.len() as u32, &mut corpus_word_map);
     log_time("built up statistics", start_time);
 
-    calculate_sample(1, 10_000, &rows, &corpus_word_map, start_time)
+    let mut locked_loaded_data = LOADED_DATA.lock().unwrap();
+    *locked_loaded_data = Some(LoadedData {
+        corpus_word_map,
+        rows,
+    });
 }
 
-fn calculate_sample(
-    sample_index: usize,
-    start_index: usize,
-    rows: &[Row],
-    corpus_word_map: &CorpusWordMap,
+pub fn analyze_sample(
+    min_price: u16,
+    max_price: u16,
+    countries: &[String],
     start_time: f64,
 ) -> Vec<WordWithImportance> {
-    log_to_screen_wasm(&format!(
-        "building up term frequencies for document sample {}.",
-        sample_index
-    ));
-    let sample_size = 1000;
-    let mut document_word_map = DocumentWordMap::new();
-    let document_rows = &rows[start_index..start_index + sample_size];
-    for row in document_rows {
-        build_up_row_document_statistics(&mut document_word_map, row);
-    }
-    calculate_tf_idf(&mut document_word_map, corpus_word_map);
-    log_time("built up TFIDF map", start_time);
+    clear_screen_log_wasm();
 
-    let top_word_count = 100;
-    let mut most_relevant_words: Vec<(&String, &DocumentWordStatistics)> =
-        document_word_map.iter().collect();
-    // TODO unwrap or and proper float comparison
-    most_relevant_words.sort_unstable_by(|entry1, entry2| {
-        let idf1 = entry1.1.tf_idf.unwrap();
-        let idf2 = entry2.1.tf_idf.unwrap();
-        if idf2 - idf1 > 0.0 {
-            Ordering::Greater
-        } else {
-            Ordering::Less
+    let locked_loaded_data = LOADED_DATA.lock().unwrap();
+    match *locked_loaded_data {
+        Some(ref locked_loaded_data) => {
+            let rows = &locked_loaded_data.rows;
+            let corpus_word_map = &locked_loaded_data.corpus_word_map;
+
+            log_to_screen_wasm("building up term frequencies for review sample.");
+            let mut document_word_map = DocumentWordMap::new();
+            let document_rows: Vec<&Row> = rows
+                .iter()
+                .filter(|row| row_matches_filter(row, min_price, max_price, countries))
+                .collect();
+            log_to_screen_wasm(&format!("Found {} reviews.", document_rows.len()));
+            for row in document_rows {
+                build_up_row_document_statistics(&mut document_word_map, row);
+            }
+            calculate_tf_idf(&mut document_word_map, corpus_word_map);
+            log_time("built up TFIDF map", start_time);
+
+            let top_word_count = 100;
+            let mut most_relevant_words: Vec<(&String, &DocumentWordStatistics)> =
+                document_word_map.iter().collect();
+            // TODO unwrap or and proper float comparison
+            most_relevant_words.sort_unstable_by(|entry1, entry2| {
+                let idf1 = entry1.1.tf_idf.unwrap();
+                let idf2 = entry2.1.tf_idf.unwrap();
+                if idf2 - idf1 > 0.0 {
+                    Ordering::Greater
+                } else {
+                    Ordering::Less
+                }
+            });
+
+            let top_words: Vec<WordWithImportance> = most_relevant_words[..top_word_count]
+                .iter()
+                .map(|entry| WordWithImportance::new(entry.0.clone(), entry.1.tf_idf.unwrap()))
+                .collect();
+
+            top_words
         }
-    });
+        None => {
+            log_to_screen_wasm("No data was loaded!");
+            Vec::new()
+        }
+    }
+}
 
-    let top_words: Vec<WordWithImportance> = most_relevant_words[..top_word_count]
-        .iter()
-        .map(|entry| WordWithImportance::new(entry.0.clone(), entry.1.tf_idf.unwrap()))
-        .collect();
-
-    top_words
+fn row_matches_filter(row: &Row, min_price: u16, max_price: u16, countries: &[String]) -> bool {
+    row.price >= min_price
+        && row.price <= max_price
+        && countries.iter().any(|country| country.eq(&row.country))
 }
 
 fn log_time(step: &str, start_time: f64) {
