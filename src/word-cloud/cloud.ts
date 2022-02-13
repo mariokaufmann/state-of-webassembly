@@ -28,7 +28,7 @@ function draw(words, origin: string) {
       return d.size + "px";
     })
     .style("font-family", "Impact")
-    .style("fill", () => colors[Math.floor(Math.random() * colors.length)])
+    .style("fill", (_d, i) => colors[i % colors.length])
     .attr("text-anchor", "middle")
     .attr("transform", function (d) {
       // @ts-ignore
@@ -41,15 +41,31 @@ function draw(words, origin: string) {
 }
 
 export function drawCloud(words: WordWithImportance[], origin: string) {
-  const lowestScore = words[words.length - 1].tf_idf;
+  if (words.length === 0) {
+    return;
+  }
+
   const wordsSlice = words.slice(0, wordsCount);
+  const highestScore = wordsSlice[0].tf_idf;
+  const lowestScore = wordsSlice[wordsSlice.length - 1].tf_idf;
+
+  const containerId = `#cloudContainer${origin}`;
+  const container = document.querySelector(containerId);
+  if (container) {
+    container.innerHTML = "";
+  }
 
   const layout = cloud()
     .size([cloudWidth, cloudHeight])
     .words(
       wordsSlice.map((word) => {
+        const normalizedFontScalingFactor =
+          (word.tf_idf - lowestScore) / (highestScore - lowestScore);
         // @ts-ignore
-        return { text: word.word, size: 10 + (word.tf_idf - lowestScore) * 20 };
+        return {
+          text: word.word,
+          size: 20 + normalizedFontScalingFactor * 20,
+        };
       })
     )
     .padding(5)

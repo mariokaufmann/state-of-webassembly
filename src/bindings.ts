@@ -7,6 +7,23 @@ export function logToScreenJs(text: string) {
   logToScreen(text, "Js");
 }
 
+export function clear_screen_log_wasm() {
+  clearScreenLog("Wasm");
+}
+
+export function clearScreenLogJs() {
+  clearScreenLog("Js");
+}
+
+function clearScreenLog(origin: string) {
+  const logContainer = document.querySelector<HTMLDivElement>(
+    "#logContainer" + origin
+  );
+  if (logContainer) {
+    logContainer.innerHTML = "";
+  }
+}
+
 function logToScreen(text: string, origin: string) {
   const logContainer = document.querySelector<HTMLDivElement>(
     "#logContainer" + origin

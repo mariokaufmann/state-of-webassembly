@@ -1,4 +1,8 @@
 pub fn process_raw_word(word: &str) -> Option<String> {
+    if !word_should_be_used(word) {
+        return None;
+    }
+
     let mut first_alphabetic_start_index = None;
     let mut last_alphabetic_exclusive_end_index = None;
     let word_length = word.len();
@@ -23,7 +27,9 @@ pub fn process_raw_word(word: &str) -> Option<String> {
                 return None;
             }
 
-            if first_alphabetic_start_index.is_some() {
+            if first_alphabetic_start_index.is_some()
+                && last_alphabetic_exclusive_end_index.is_none()
+            {
                 last_alphabetic_exclusive_end_index = Some(slice_index);
             }
         }
@@ -38,6 +44,10 @@ pub fn process_raw_word(word: &str) -> Option<String> {
     let end_index = last_alphabetic_exclusive_end_index.unwrap_or(word_length);
 
     Some(String::from(&word[start_index..end_index]))
+}
+
+fn word_should_be_used(word: &str) -> bool {
+    word.len() > 1 && !word.contains('-')
 }
 
 #[cfg(test)]
@@ -58,5 +68,10 @@ mod tests {
         assert_eq!(process_raw_word("1993"), None);
         assert_eq!(process_raw_word("()"), None);
         assert_eq!(process_raw_word("12$"), None);
+
+        assert_eq!(process_raw_word("now–2025"), Some("now".to_owned()));
+
+        assert_eq!(process_raw_word("i"), None);
+        assert_eq!(process_raw_word("cobbler-like"), None);
     }
 }
