@@ -5,9 +5,9 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --base=/webassembly-demo/",
     "preview": "vite preview",
-    "build": "tsc && vite build",
+    "build": "tsc && vite build --base=/webassembly-demo/",
     "lint": "prettier --check **/*.{ts,css,html,json,md}",
     "build:wasm": "wasm-pack build wasm --target web --out-dir ../wasm-pkg -- --color=always"
   },
