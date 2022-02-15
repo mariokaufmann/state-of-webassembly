@@ -3,10 +3,9 @@ use std::collections::{HashMap, HashSet};
 use std::sync::Mutex;
 
 use lazy_static::lazy_static;
-use regex::Regex;
 use serde::{Deserialize, Serialize};
 
-use crate::bindings::{clear_screen_log_wasm, log, log_to_screen_wasm, WordWithImportance};
+use crate::bindings::{clear_screen_log_wasm, log_to_screen_wasm, WordWithImportance};
 use crate::preprocessing::process_raw_word;
 
 #[derive(Serialize, Deserialize)]
@@ -46,27 +45,6 @@ lazy_static! {
     static ref LOADED_DATA: Mutex<Option<LoadedData>> = Mutex::new(None);
 }
 
-fn build_up_row_corpus_statistics(word_map: &mut CorpusWordMap, document_index: u32, row: &Row) {
-    for word in &row.words {
-        match word_map.get_mut(word) {
-            Some(value) => {
-                value.total_count += 1;
-                value.document_appearances.insert(document_index);
-            }
-            None => {
-                word_map.insert(
-                    word.clone(),
-                    CorpusWordStatistics {
-                        total_count: 1,
-                        document_appearances: HashSet::from([document_index]),
-                        inverse_document_frequency: None,
-                    },
-                );
-            }
-        }
-    }
-}
-
 fn calculate_inverse_document_frequencies(
     total_number_of_documents: u32,
     word_map: &mut CorpusWordMap,
@@ -78,30 +56,38 @@ fn calculate_inverse_document_frequencies(
     }
 }
 
-fn process_raw_row(regex: &Regex, raw_row: RawRow) -> Option<Row> {
-    let words: Vec<String> = raw_row
-        .description
-        .split(' ')
-        .filter_map(process_raw_word)
-        .collect();
-
-    // let words: Vec<String> = raw_row
-    //     .description
-    //     .split(' ')
-    //     .filter_map(|word| {
-    //         if let Some(found_match) = regex.find(word) {
-    //             return Some(String::from(found_match.as_str()));
-    //         }
-    //         None
-    //     })
-    //     .collect();
-
+fn process_row(raw_row: RawRow, word_map: &mut CorpusWordMap, document_index: u32) -> Option<Row> {
     if let Some(country) = raw_row.country {
         if let Some(price) = raw_row.price {
+            let words: Vec<String> = raw_row
+                .description
+                .split(' ')
+                .filter_map(process_raw_word)
+                .collect();
+
+            for word in &words {
+                match word_map.get_mut(word) {
+                    Some(value) => {
+                        value.total_count += 1;
+                        value.document_appearances.insert(document_index);
+                    }
+                    None => {
+                        word_map.insert(
+                            word.clone(),
+                            CorpusWordStatistics {
+                                total_count: 1,
+                                document_appearances: HashSet::from([document_index]),
+                                inverse_document_frequency: None,
+                            },
+                        );
+                    }
+                }
+            }
+
             return Some(Row {
-                words,
-                country,
+                country: country.to_owned(),
                 price,
+                words,
             });
         }
     }
@@ -148,28 +134,29 @@ fn calculate_tf_idf(word_map: &mut DocumentWordMap, corpus_map: &CorpusWordMap) 
 }
 
 pub fn process(text: &str, start_time: f64) {
+    // hack: force the allocation of enough memory to hold the entire dataset in WASM memory
+    let buffer: Vec<u8> = Vec::with_capacity(200_000_000);
+    drop(buffer);
+
     log_to_screen_wasm("parsing data");
     let mut raw_rows: Vec<RawRow> = serde_json::from_str(text).unwrap();
     log_time("parsed data", start_time);
 
-    log_to_screen_wasm("starting preprocessing");
-    let regex = Regex::new(r"\p{L}+").unwrap();
+    log_to_screen_wasm("starting processing");
+
     for row in &mut raw_rows {
         row.description.make_ascii_lowercase();
     }
-    let rows: Vec<Row> = raw_rows
-        .into_iter()
-        .filter_map(|raw_row| process_raw_row(&regex, raw_row))
-        .collect();
-    log_time("preprocessed rows", start_time);
 
-    log_to_screen_wasm("building up statistics");
     let mut corpus_word_map = CorpusWordMap::new();
-    for (index, row) in rows.iter().enumerate() {
-        build_up_row_corpus_statistics(&mut corpus_word_map, index as u32, row);
+    let mut rows = Vec::with_capacity(raw_rows.len());
+    for (index, raw_row) in raw_rows.into_iter().enumerate() {
+        if let Some(row) = process_row(raw_row, &mut corpus_word_map, index as u32) {
+            rows.push(row);
+        }
     }
-    calculate_inverse_document_frequencies(rows.len() as u32, &mut corpus_word_map);
-    log_time("built up statistics", start_time);
+    calculate_inverse_document_frequencies(corpus_word_map.len() as u32, &mut corpus_word_map);
+    log_time("preprocessed rows and built up statistics", start_time);
 
     let mut locked_loaded_data = LOADED_DATA.lock().unwrap();
     *locked_loaded_data = Some(LoadedData {
