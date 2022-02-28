@@ -5,9 +5,9 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "dev": "vite --base=/webassembly-demo/",
+    "dev": "vite --base=/demo/wordcloud/",
     "preview": "vite preview",
-    "build": "tsc && vite build --base=/webassembly-demo/",
+    "build": "tsc && vite build --base=/demo/wordcloud/",
     "lint": "prettier --check **/*.{ts,css,html,json,md}",
     "build:wasm": "wasm-pack build wasm --target web --out-dir ../wasm-pkg -- --color=always"
   },
