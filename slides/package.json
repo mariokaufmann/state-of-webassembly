@@ -1,0 +1,21 @@
+{
+  "name": "state-of-webassembly-slides",
+  "version": "0.0.1",
+  "description": "",
+  "private": true,
+  "scripts": {
+    "dev:slides": "vite --base=/slides/ --port 3001",
+    "preview": "vite preview",
+    "build:slides": "vite build --base=/demo/wordcloud/"
+  },
+  "author": "Mario Kaufmann",
+  "license": "ISC",
+  "devDependencies": {
+    "vite": "2.8.5"
+  },
+  "dependencies": {
+    "highlight.js": "11.4.0",
+    "marked": "4.0.12",
+    "reveal.js": "4.3.0"
+  }
+}

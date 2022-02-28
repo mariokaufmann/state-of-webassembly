@@ -1,0 +1,216 @@
+<section class="deck-slide">
+    <h1>Web components</h1>
+</section>
+<section>
+    <p>Web components are a standardized way to create encapsulated UI components in the web</p>
+</section>
+<section>
+    <h2>Web APIs</h2>
+    <p>Web components are based on three standardized Web APIs:</p>
+    <ul>
+        <li>Custom elements</li>
+        <li>Shadow DOM</li>
+        <li>HTML templates</li>
+        <li>HTML templates</li>
+    </ul>
+</section>
+<section>
+    <section>
+        <h2>Shadow DOM</h2>
+        <p>Web components contain encapsulated functionality. Shadow DOM makes this possible.</p>
+    </section>
+    <section>
+        <p>Shadow DOM makes it possible to attach a hidden DOM tree to a normal element in a DOM. The tree has a shadow
+            root and can contain arbitrary nodes.</p>
+    </section>
+
+    <section>
+        <h3>Usage</h3>
+        <pre>
+             <code class="hljs javascript" data-trim contenteditable data-noescape>
+                 const container = document.createElement('div');
+                 container.attachShadow({mode: 'open'});
+                 const text = document.createElement('p');
+                 text.innerHTML = 'Hello from shadow DOM!';
+                 const style = document.createElement('style');
+                 style.textContent = 'p { color: red }';
+                 container.shadowRoot.append(style, text);
+            </code>
+        </pre>
+    </section>
+    <section>
+        <h3>Browser support</h3>
+        <ul>
+            <li>Full support in modern browsers</li>
+            <li>No support in IE11 and old versions of Edge</li>
+        </ul>
+    </section>
+</section>
+<section>
+    <section>
+        <h2>Custom elements</h2>
+        <p>JavaScript API to create custom HTML elements with encapsulated functionality</p>
+    </section>
+    <section>
+        <h3>CustomElementRegistry</h3>
+        <ul>
+            <li>Registry for custom elements on the page</li>
+            <li>Can be used to register new elements and query those registered already</li>
+        </ul>
+    </section>
+    <section>
+        <h3>Definition of a custom element </h3>
+        <p>A custom element is defined through a selector and a class object</p>
+        <pre>
+             <code class="hljs javascript" data-trim contenteditable data-noescape>
+                    class FriendlyGreeting extends HTMLElement {
+                        constructor() {
+                            // Always call super first in constructor
+                            super();
+
+                            this.attachShadow({mode: 'open'});
+                            const heading = document.createElement('h1');
+                            heading.textContent = 'Hello from custom element!';
+                            this.shadowRoot.appendChild(heading);
+                        }
+                    }
+
+                    customElements
+                        .define('friendly-greeting', FriendlyGreeting);
+             </code>
+        </pre>
+    </section>
+    <section>
+        <h3>Definition of a custom element </h3>
+        <p>Can be used like a normal HTML tag</p>
+        <pre>
+             <code class="hljs xml" data-trim contenteditable data-noescape>
+                 &lt;friendly-greeting&gt;&lt;/friendly-greeting&gt;
+             </code>
+        </pre>
+    </section>
+    <section>
+        <h3>Lifecycle callbacks</h3>
+        <p>Lifecycle callbacks are called on certain events:</p>
+        <ul>
+            <li><b>connectedCallback:</b> when the element is inserted into the DOM or moved within the DOM</li>
+            <li><b>disconnectedCallback:</b> when the element is separated from the DOM</li>
+            <li><b>adoptedCallback:</b> when the element is moved into a new document</li>
+            <li><b>attributeChangedCallback:</b> when an observed HTML attribute of the element is changed</li>
+        </ul>
+    </section>
+    <section>
+        <h3>Types of custom elements</h3>
+        <ul>
+            <li>Autonomous custom elements</li>
+            <li>Customized built-in elements</li>
+        </ul>
+    </section>
+    <section>
+        <h3>Autonomous custom element</h3>
+        <p>Custom element that does not extend existing HTML element</p>
+        <pre>
+             <code class="hljs xml" data-trim contenteditable data-noescape>
+                 &lt;friendly-greeting&gt;&lt;/friendly-greeting&gt;
+             </code>
+        </pre>
+    </section>
+    <section>
+        <h3>Customized built-in elements</h3>
+        <p>Custom element that inherits from HTML element</p>
+        <pre>
+             <code class="hljs javascript" data-trim contenteditable data-noescape>
+                    class WordCount extends HTMLParagraphElement {
+                      constructor() {
+                        // Always call super first in constructor
+                        super();
+
+                        // custom element functionality
+
+                        ...
+                      }
+                    }
+             </code>
+        </pre>
+    </section>
+    <section>
+        <h3>Customized built-in elements</h3>
+        <pre>
+             <code class="hljs xml" data-trim contenteditable data-noescape>
+                 &lt;p is="word-count"&gt;&lt;/p&gt;
+             </code>
+        </pre>
+    </section>
+    <section>
+        <h3>Browser support</h3>
+        <ul>
+            <li>Autonomous custom elements supported by all modern browsers
+            </li>
+            <li>Customized built-in elements supported in Chrome, Firefox and newer
+                versions of Edge. No support in Safari und Opera.
+            </li>
+            <li>No support in IE11 and old versions of Edge</li>
+        </ul>
+    </section>
+</section>
+<section>
+    <section>
+        <h2>HTML templates</h2>
+        <p>Special HTML elements for the creation of reusable markup</p>
+        <ul>
+            <li>&lt;template&gt;: reusable template</li>
+            <li>&lt;slot&gt;: slot for projection of elements from outside of the template (similar to
+                <i>ng-content</i>)
+            </li>
+        </ul>
+    </section>
+    <section>
+        <h3>&lt;template&gt;</h3>
+        <ul>
+            <li>Defines a template that can be inserted into the DOM as many times a desired</li>
+            <li>Is not rendered itself</li>
+        </ul>
+    </section>
+    <section>
+            <pre>
+                <code class="hljs xml" data-trim contenteditable data-noescape>
+                    &lt;template id=&quot;my-greeting&quot;&gt;
+                        &lt;p&gt;Hello from HTML template!&lt;/p&gt;
+                    &lt;/template&gt;
+                </code>
+            </pre>
+        <pre>
+             <code class="hljs javascript" data-trim contenteditable data-noescape>
+                 let template = document.getElementById('my-greeting');
+                 let templateContent = template.content;
+                 document.body.appendChild(templateContent);
+            </code>
+        </pre>
+    </section>
+    <section>
+        <h3>&lt;slot&gt;</h3>
+        <ul>
+            <li>Defines slot where content from outside can be inserted</li>
+            <li>Especially useful in connection with web components</li>
+        </ul>
+    </section>
+    <section>
+        <h3>Browser support</h3>
+        <ul>
+            <li>
+                &lt;template&gt;:
+                <ul>
+                    <li>Full support in modern browsers</li>
+                    <li>No support in IE and old versions of Edge</li>
+                </ul>
+            </li>
+            <li>
+                &lt;slot&gt;:
+                <ul>
+                    <li>Full support in modern browsers</li>
+                    <li>No support in IE and old versions of Edge</li>
+                </ul>
+            </li>
+        </ul>
+    </section>
+</section>
