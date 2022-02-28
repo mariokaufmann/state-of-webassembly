@@ -5,10 +5,10 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "dev": "vite --base=/demo/wordcloud/",
-    "preview": "vite preview",
-    "build": "tsc && vite build --base=/demo/wordcloud/",
-    "lint": "prettier --check **/*.{ts,css,html,json,md}",
+    "dev:wordcloud": "vite --base=/demo/wordcloud/",
+    "preview:wordcloud": "vite preview",
+    "build:wordcloud": "tsc && vite build --base=/demo/wordcloud/",
+    "lint:wordcloud": "prettier --check **/*.{ts,css,html,json,md}",
     "build:wasm": "wasm-pack build wasm --target web --out-dir ../wasm-pkg -- --color=always"
   },
   "author": "",
@@ -18,7 +18,7 @@
     "d3-cloud": "1.2.5",
     "d3-scale": "4.0.2",
     "typescript": "4.5.5",
-    "vite": "2.7.13"
+    "vite": "2.8.5"
   },
   "devDependencies": {
     "@types/d3": "7.1.0",
