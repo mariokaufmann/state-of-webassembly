@@ -1,5 +1,9 @@
 # state-of-webassembly
 
+## Slides
+Serve with
+`npm run dev:slides`
+
 ## Demos
 
 ### wordcloud
