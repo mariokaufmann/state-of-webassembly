@@ -6,7 +6,7 @@
   "scripts": {
     "dev:slides": "vite --base=/slides/ --port 3001",
     "preview": "vite preview",
-    "build:slides": "vite build --base=/demo/wordcloud/"
+    "build:slides": "vite build --base=/slides/"
   },
   "author": "Mario Kaufmann",
   "license": "ISC",
