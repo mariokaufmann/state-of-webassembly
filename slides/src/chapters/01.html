@@ -1,6 +1,238 @@
 <section class="deck-slide">
-    <h1>wasm basics</h1>
+    <h1>WebAssembly Basics</h1>
+</section>
+
+<section>
+    <img alt="WebAssembly logo" src="../img/Web_Assembly_Logo.svg" width="10%" />
+    <h2>WebAssembly = wasm</h2>
+</section>
+
+<section>
+    <section>
+        <h2>Browser Support?</h2>
+        <img alt="wasm browser support" src="../img/wasm-support.png" />
+    </section>
+    <section>
+        <h2>Node.js</h2>
+        <p>
+            Support since v8.0 (2017)
+        </p>
+    </section>
+</section>
+
+<section>
+    <section>
+        <h2>What is wasm?</h2>
+        <p>WebAssembly (abbreviated Wasm) is a binary instruction format for a stack-based virtual machine. Wasm is designed as a portable compilation target for programming languages, enabling deployment on the web for client and server applications.</p>
+    </section>
+    <section>
+        <h2>But what does that actually mean?</h2>
+        <ul>
+            <li class="fragment">Compile anything to the web</li>
+            <li class="fragment">Create npm packages out of any third party library</li>
+            <li class="fragment">Pick the right tool for the task (e.g. math)</li>
+        </ul>
+    </section>
+    <section>
+        <h2>What languages can be compiled to wasm?</h2>
+        <ul>
+            <li class="fragment">
+                <a href="https://github.com/appcypher/awesome-wasm-langs" target="_blank">
+                    List of wasm languages
+                </a>
+            </li>
+            <li class="fragment">Support is growing!</li>
+        </ul>
+    </section>
+</section>
+
+<section>
+    <section>
+        <h2>Compilation example</h2>
+    </section>
+    <section>
+        <h2>C</h2>
+        <pre>
+            <code class="hljs c" data-trim contenteditable data-noescape>
+                int factorial(int n) {
+                  if (n == 0)
+                    return 1;
+                  else
+                    return n * factorial(n - 1);
+                }
+            </code>
+            </pre>
+    </section>
+    <section>
+        <h2>Intermediate format</h2>
+        <pre>
+            <code class="hljs" data-trim contenteditable data-noescape>
+                get_local 0
+                i64.eqz
+                if (result i64)
+                    i64.const 1
+                else
+                    get_local 0
+                    get_local 0
+                    i64.const 1
+                    i64.sub
+                    call 0
+                    i64.mul
+                end
+            </code>
+            </pre>
+    </section>
+    <section>
+        <h2>wasm binary format</h2>
+        <pre>
+            <code class="hljs" data-trim contenteditable data-noescape>
+                20 00
+                50
+                04 7E
+                42 01
+                05
+                20 00
+                20 00
+                42 01
+                7D
+                10 00
+                7E
+                0B
+            </code>
+            </pre>
+    </section>
+    <section>
+        <h2>Text representation (s-expr)</h2>
+        <pre>
+            <code class="hljs scheme" data-trim contenteditable data-noescape>
+                (module
+                  (import "math" "exp" (func $exp (param f64) (result f64)))
+                  (func (export "doubleExp") (param $0 f64) (result f64)
+                    (f64.mul
+                      (call $exp
+                        (get_local $0)
+                      )
+                      (f64.const 2)
+                    )
+                  )
+                )
+            </code>
+            </pre>
+    </section>
+</section>
+
+<section>
+    <section>
+        <h2>Limitations</h2>
+    </section>
+    <section>
+        <h2>Memory</h2>
+        <ul>
+            <li>Only flat linear memory support</li>
+            <li class="fragment">No Garbage Collection except custom written</li>
+            <li class="fragment">Work in progress</li>
+        </ul>
+    </section>
+    <section>
+        <h2>DOM</h2>
+        <ul>
+            <li>No DOM access from within wasm</li>
+            <li class="fragment">DOM API proposed for future version</li>
+        </ul>
+    </section>
+    <section>
+        <h2>GPU</h2>
+        <ul>
+            <li>No GPU access</li>
+            <li>Not planned right now</li>
+            <li>Follow the W3C <a href="https://github.com/gpuweb/gpuweb" target="_blank">gpuweb proposal</a></li>
+        </ul>
+    </section>
+    <section>
+        <h2>Types</h2>
+        <img alt="wasm interface types" src="../img/wasm-types.png">
+    </section>
+    <section>
+        <h2>How do we exchange other types?</h2>
+        <ul>
+            <li class="fragment">
+                Other types we have to pass the reference and read it directly from memory
+            </li>
+            <li class="fragment">We'll see that later</li>
+        </ul>
+    </section>
 </section>
 <section>
-    <p>WebAssembly (abbreviated Wasm) is a binary instruction format for a stack-based virtual machine. Wasm is designed as a portable compilation target for programming languages, enabling deployment on the web for client and server applications.</p>
+    <section>
+        <h2>What is coming?</h2>
+    </section>
+    <section>
+        <h2>Garbage Collection</h2>
+        <ul>
+            <li>Currently not supported</li>
+            <li>Languages with GC compile it themselves</li>
+            <li>Bad for binary size and efficiency</li>
+        </ul>
+    </section>
+    <section>
+        <h2>Host bindings</h2>
+        <ul>
+            <li>Currently we have a very limited interface</li>
+            <li>Add sharing of JS/DOM objects</li>
+            <li>Create, call, manipulate and pass objects</li>
+        </ul>
+    </section>
+    <section>
+        <h2>Exception Handling</h2>
+        <ul>
+            <li>No support so far</li>
+            <li>Fairly challenging proposal (#2)</li>
+            <li>Currently proposing a generic concept of events</li>
+        </ul>
+    </section>
+    <section>
+        <h2>Reference Types</h2>
+        <ul>
+            <li>Currently minimal set of types</li>
+            <li>Serialize more complex types to memory</li>
+            <li>New "anyref" type that allows references to JS objects</li>
+        </ul>
+    </section>
+    <section>
+        <h2>WASI</h2>
+        <ul>
+            <li>WebAssembly System Interface</li>
+            <li>Outside of the Browser</li>
+            <li>Includes I/O</li>
+        </ul>
+    </section>
+    <section>
+        <h2>And so much more...</h2>
+    </section>
+</section>
+
+<section>
+    <h2>Resources</h2>
+    <ul>
+        <li>
+            <a href="https://github.com/webassembly" target="_blank">
+                WebAssembly on Github
+            </a>
+        </li>
+        <li>
+            <a href="https://github.com/WebAssembly/proposals" target="_blank">
+                WebAssembly Proposals
+            </a>
+        </li>
+        <li>
+            <a href="https://blog.scottlogic.com/2018/07/20/wasm-future.html" target="_blank">
+                The future of WebAssembly by Colin Eberhardt
+            </a>
+        </li>
+        <li>
+            <a href="https://github.com/appcypher/awesome-wasm-langs" target="_blank">
+                List of wasm languages
+            </a>
+        </li>
+    </ul>
 </section>
