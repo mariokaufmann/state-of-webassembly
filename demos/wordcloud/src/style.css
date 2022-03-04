@@ -51,6 +51,10 @@ button:hover {
   background: var(--light-sea-green);
 }
 
+.hidden {
+  visibility: hidden;
+}
+
 #title {
   display: flex;
   flex-direction: column;

@@ -16,6 +16,7 @@ function query<E extends Element>(id: string): E {
 }
 
 // query elements
+const wasmProcessingContainer = query<HTMLDivElement>("wasm-processing");
 const dropZone = query<HTMLDivElement>("dropZone");
 const minimumPriceInput = query<HTMLInputElement>("minimumPriceRangeInput");
 const minimumPriceDisplay = query<HTMLParagraphElement>("minimumPrice");
@@ -35,6 +36,10 @@ function onFilterModified() {
   const countries = countryDatasets[selectedDatasetKey];
 
   drawCloudFromSample(minPrice, maxPrice, countries);
+}
+
+if (location.href.endsWith("?js=true")) {
+  wasmProcessingContainer.classList.add("hidden");
 }
 
 Object.keys(countryDatasets).forEach((key) => {

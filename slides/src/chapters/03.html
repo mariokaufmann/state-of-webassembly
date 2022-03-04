@@ -1,3 +1,155 @@
 <section class="deck-slide">
-    <h1>Speed up applications</h1>
+    <h1>Improve performance with wasm</h1>
+</section>
+<section>
+    <p>WebAssembly aims to execute at near-native speed</p>
+    <p>How can we make use of that?</p>
+</section>
+<section>
+    <h2>No silver bullet</h2>
+    <ul>
+        <li>JS engines are heavily optimized</li>
+        <li>WebAssembly will only be faster for certain workloads</li>
+        <li>Always measure!</li>
+    </ul>
+</section>
+<section>
+    <h2>Showcase app</h2>
+    <p>Take set of 150k wine reviews from Twitter and generate a word cloud from a subset of the reviews with
+        the most relevant words</p>
+    <img alt="word cloud wine reviews (wines from South America)" src="../../img/word-cloud/wordcloud_south_america.png" width="50%"/>
+</section>
+<section>
+    <h2>Why do it in the browser?</h2>
+    <ul>
+        <li>No server-side processing power needed</li>
+        <li>Potentially sensitive data sets need not be uploaded to the server</li>
+    </ul>
+</section>
+<section>
+    <h3>Dataset</h3>
+    <h4>Review for Quinta dos Avidagos 2011 Avidagos Red</h4>
+    <ul>
+        <li>Points: 87</li>
+        <li>Description: This is ripe and fruity, a wine that is smooth while still structured. Firm tannins are filled out with juicy red berry fruits and freshened with acidity. It's  already drinkable, although it will certainly be better from 2016.</li>
+        <li>Variety: Portuguese Red</li>
+        <li>Province: Douro</li>
+        <li>Country: Portugal</li>
+    </ul>
+</section>
+<section>
+    <h2>What are the most relevant words?</h2>
+    <p>We don't want the most frequent but the most relevant words</p>
+    <p>For our example we use TF-IDF</p>
+</section>
+<section>
+    <h2>TF-IDF</h2>
+    <h3>Term frequency - inverse document frequency</h3>
+    <ul>
+        <li>Corpus: set of all reviews</li>
+        <li>Document: (in our case) a subset of all reviews</li>
+    </ul>
+    <ul>
+        <li>Term frequency: measure for how often a word appears in a document</li>
+        <li>Inverse document frequency: measure for how rare a word is within the corpus</li>
+    </ul>
+</section>
+<section>
+    <h2>TF-IDF</h2>
+    <p>TF-IDF value for a word = TF * IDF</p>
+    <small>Frequency of the word offset by how rare it is</small>
+    <p>In our case a good measure to filter out common words like 'is', 'the', 'wine', etc.</p>
+</section>
+<section>
+    <a href="http://localhost:3000/demo/wordcloud/?js=true" target="_blank">
+        <h2>Demo</h2>
+    </a>
+</section>
+<section>
+    <h2>Time needed for generating word cloud</h2>
+    <ul>
+        <li>Chrome: 2.5-3.0s</li>
+        <li>Safari: 4.0-4.5s</li>
+        <li>Firefox: 3.5-4.0s</li>
+    </ul>
+    <small>Specific example, not representative of general browser performance differences</small>
+</section>
+<section>
+    <p>Let's try to speed it up!</p>
+</section>
+<section>
+    <h2>Goal</h2>
+    <p>Create a WebAssembly module that can generate exactly the same word cloud</p>
+</section>
+<section>
+    <h2>Approach</h2>
+    <p>Use</p>
+    <ul>
+        <li>Rust as implementation language</li>
+        <li>wasm-bindgen for generating glue code between JS and wasm</li>
+        <li>web-sys and js-sys crates for bindings into JS</li>
+        <li>wasm-pack for bundling up module and glue code</li>
+    </ul>
+</section>
+<section>
+    <p>Processing function</p>
+    <pre>
+        <code class="hljs rust" data-trim contenteditable data-noescape>
+            #[wasm_bindgen]
+            pub fn process_with_wasm(text: &str) {
+                processing::process(text)
+            }
+        </code>
+    </pre>
+    <ul>
+        <li>#[wasm_bindgen] annotation for glue code generation</li>
+        <li>Data (&str) is automatically encoded/decoded by wasm-bindgen</li>
+    </ul>
+    <small></small>
+</section>
+<section>
+    <p>Word cloud function</p>
+    <small>Returns the most relevant words with an importance score</small>
+    <pre>
+        <code class="hljs rust" data-trim contenteditable data-noescape>
+            #[wasm_bindgen]
+            pub fn analyze_sample_with_wasm(min_price: u16,
+                max_price: u16,
+                countries: JsValue
+            ) -> JsValue {
+                let countries: Vec&lt;String&gt; = countries.into_serde()
+                .unwrap();
+                JsValue::from_serde(&processing::analyze_sample(
+                    min_price, max_price, &countries,
+                ))
+                .unwrap()
+            }
+        </code>
+    </pre>
+</section>
+<section>
+    <pre>
+        <code class="hljs rust" data-trim contenteditable data-noescape>
+            #[wasm_bindgen]
+            pub fn analyze_sample_with_wasm(min_price: u16,
+                max_price: u16,
+                countries: JsValue
+            ) -> JsValue { ... }
+        </code>
+    </pre>
+    <p>Non-primitive values (objects/structs, lists of objects) can be passed as JSValue through JSON marshalling</p>
+</section>
+<section>
+    <h2>Implementation process</h2>
+    <ul>
+        <li>Implement processing logic in Rust</li>
+        <li>Make sure that Rust and JS return the same words for the same dataset</li>
+        <li>Profile Rust implementation and find performance bottlenecks</li>
+    </ul>
+    <small>More on profiling wasm code later</small>
+</section>
+<section>
+    <a href="http://localhost:3000/demo/wordcloud/" target="_blank">
+        <h2>Demo</h2>
+    </a>
 </section>
