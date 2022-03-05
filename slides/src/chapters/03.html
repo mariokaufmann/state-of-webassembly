@@ -68,9 +68,9 @@
 <section>
     <h2>Time needed for generating word cloud</h2>
     <ul>
-        <li>Chrome: 2.5-3.0s</li>
         <li>Safari: 4.0-4.5s</li>
         <li>Firefox: 3.5-4.0s</li>
+        <li>Chrome: 2.5-3.0s</li>
     </ul>
     <small>Specific example, not representative of general browser performance differences</small>
 </section>
@@ -152,4 +152,152 @@
     <a href="http://localhost:3000/demo/wordcloud/" target="_blank">
         <h2>Demo</h2>
     </a>
+</section>
+<section>
+    <h2>Time needed for generating word cloud (wasm)</h2>
+    <ul>
+        <li>Safari: 1.5-2.0s</li>
+        <li>Firefox: 1.5-2.0s</li>
+        <li>Chrome: 8.0-8.5s (!)</li>
+    </ul>
+    <p>What is happening in Chrome?</p>
+</section>
+<section>
+    <section>
+        <p>How to profile our code?</p>
+    </section>
+    <section>
+        <p>Use dev tools (performance tab)</p>
+        <img src="../../img/word-cloud/profiling1.png" />
+    </section>
+    <section>
+        <p>Use dev tools (performance tab)</p>
+        <img src="../../img/word-cloud/profiling1.png" />
+        <p class="tip">
+            wasm runs slower when dev tools are open - except when profiling in performance tab!
+        </p>
+    </section>
+    <section>
+        <p>Find relevant function call</p>
+        <img src="../../img/word-cloud/profiling2.png" />
+    </section>
+    <section>
+        <p>Not very readable unfortunately</p>
+        <img src="../../img/word-cloud/profiling3.png" />
+    </section>
+    <section>
+        <p>Include debug symbols and disable optimizations in the wasm build</p>
+        <pre>
+        <code class="hljs toml" data-trim contenteditable data-noescape>
+            [profile.release]
+            opt-level = 3
+            lto = true
+            debug = true
+            [package.metadata.wasm-pack.profile.release]
+            wasm-opt = false
+            [package.metadata.wasm-pack.profile.release.wasm-bindgen]
+            debug-js-glue = true
+            demangle-name-section = true
+            dwarf-debug-info = true
+        </code>
+    </pre>
+        <small>These options are input language (and toolchain) specific</small>
+    </section>
+    <section>
+        <p>Include debug symbols and disable optimizations in the wasm build</p>
+        <pre>
+        <code class="hljs toml" data-trim contenteditable data-noescape>
+            [profile.release]
+            opt-level = 3
+            lto = true
+            debug = true
+            [package.metadata.wasm-pack.profile.release]
+            wasm-opt = false
+            [package.metadata.wasm-pack.profile.release.wasm-bindgen]
+            debug-js-glue = true
+            demangle-name-section = true
+            dwarf-debug-info = true
+        </code>
+    </pre>
+        <p class="tip">A build like this will both be larger and slower typically</p>
+    </section>
+</section>
+<section>
+    <p>Now we have a readable profiling session!</p>
+    <img src="../../img/word-cloud/profiling_alloc.png" />
+</section>
+<section>
+    <p>Zooming in, memory allocations seem to dominate</p>
+    <img src="../../img/word-cloud/profiling_alloc.png" />
+</section>
+<section>
+    <p>working in low level languages makes it possible to control when memory is allocated to some extent</p>
+    <pre>
+        <code class="hljs rust" data-trim contenteditable data-noescape>
+            let corpus_word_map = HashMap::with_capacity(100_000);
+        </code>
+    </pre>
+    <small>Making sure that the hash map does not need to grow when inserting the elements</small>
+</section>
+<section>
+    <ul>
+        <li>Result: a bit faster in Chrome, but not substantially</li>
+        <li>Not possible to easily optimize all allocations (we don't know the dataset in advance)</li>
+    </ul>
+</section>
+<section>
+    <p>Let's use another tool - chrome://tracing</p>
+    <img src="../../img/word-cloud/tracing.png"  alt="Chrome tracing tools"/>
+</section>
+<section>
+    <h2>Chrome tracing tools</h2>
+    <ul>
+        <li>Trace low-level Chrome events</li>
+        <li>among many other things, v8.wasm events</li>
+    </ul>
+</section>
+<section>
+    <img src="../../img/word-cloud/tracing_results.png" />
+    <p>Large number of wasm.GrowMemory operations</p>
+</section>
+<section>
+    <h2>WebAssembly memory</h2>
+    <ul>
+        <li>wasm memory is a linear buffer</li>
+        <li>Every time it is grown the memory potentially needs to be relocated</li>
+    </ul>
+</section>
+<section>
+    <p>let's try to minimize the number of grow operations</p>
+    <pre>
+        <code class="hljs rust" data-trim contenteditable data-noescape>
+            pub fn process(text: &str, start_time: f64) {
+                let buffer: Vec&lt;u8&gt; = Vec::with_capacity(200_000_000);
+                drop(buffer);
+                ...
+            }
+        </code>
+    </pre>
+    <small>In a real application this number wouldn't be constant</small>
+</section>
+<section>
+    <p>Success!</p>
+    <img src="../../img/word-cloud/chrome_preallocation.png" />
+</section>
+<section>
+    <h2>Time needed for generating word cloud (wasm + preallocation)</h2>
+    <ul>
+        <li>Safari: 1.5-2.0s</li>
+        <li>Firefox: 1.5-2.0s</li>
+        <li>Chrome: 1.5-2.0s</li>
+    </ul>
+    <small>Safari and Firefox roughly the same, Chrome now also in the same area.</small>
+</section>
+<section>
+    <h2>Summary</h2>
+    <ul>
+        <li>For certain workloads, one can improve performance with wasm</li>
+        <li>Minimize allocations and growing memory, minimize calls across marshalling boundary</li>
+        <li>always measure!</li>
+    </ul>
 </section>
