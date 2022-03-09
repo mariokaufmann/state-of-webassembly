@@ -1,3 +1,84 @@
 <section class="deck-slide">
-    <h1>wasm features</h1>
+  <h1>wasm features</h1>
+</section>
+<section>
+  <h2>WebAssembly MVP</h2>
+  <ul>
+    <li>In 2017 an MVP of WebAssembly was implemented by browser vendors</li>
+    <li>Since then new features are added through a standardization process</li>
+  </ul>
+</section>
+<section>
+  <section>
+    <h2>Standardized features</h2>
+    <img alt="Wasm standardized features" src="../../img/wasm_features_standardized.png" />
+  </section>
+  <section>
+    <h2>SIMD</h2>
+    <p>SIMD stands for Single Instruction, Multiple Data. SIMD instructions are a special class of instructions that
+      exploit data parallelism in applications by simultaneously performing the same operation on multiple data
+      elements</p>
+    <a href="https://v8.dev/features/simd" target="_blank">https://v8.dev/features/simd</a>
+  </section>
+  <section>
+    <h2>Reference types</h2>
+    <p>Get JS values by reference</p>
+    <pre>
+        <code class="hljs rust" data-trim contenteditable data-noescape>
+            #[wasm_bindgen]
+            pub fn takes_js_value(a: &JsValue) {
+              // ...
+            }
+        </code>
+    </pre>
+  </section>
+  <section>
+    <h2>Reference types</h2>
+    <p>Glue code without proposal</p>
+    <pre>
+        <code class="hljs js" data-trim contenteditable data-noescape>
+            const heap = new Array(32).fill(undefined);
+            heap.push(undefined, null, true, false);
+            let stack_pointer = 32;
+            function addBorrowedObject(obj) {
+                if (stack_pointer == 1)
+                    throw new Error('out of js stack');
+                heap[--stack_pointer] = obj;
+                return stack_pointer;
+            }
+            export function takes_js_value(a) {
+                try {
+                    wasm.takes_js_value(addBorrowedObject(a));
+                } finally {
+                    heap[stack_pointer++] = undefined;
+                }
+            }
+        </code>
+    </pre>
+  </section>
+  <section>
+    <h2>Reference types</h2>
+    <p>Glue code with proposal</p>
+    <pre>
+        <code class="hljs js" data-trim contenteditable data-noescape>
+            export function takes_js_value(a) {
+                wasm.takes_js_value(a);
+            }
+        </code>
+    </pre>
+    <a href="https://rustwasm.github.io/wasm-bindgen/reference/reference-types.html" target="_blank">
+      https://rustwasm.github.io/wasm-bindgen/reference/reference-types.html</a>
+  </section>
+</section>
+<section>
+  <h2>In-progress features</h2>
+  <img alt="Wasm standardized features" src="../../img/wasm_features_in-progress.png" />
+</section>
+<section>
+  <h2>Detect WebAssembly features</h2>
+  <ul>
+    <li>With the <a href="https://wasm-feature-detect.surma.technology/">wasm-feature-detect</a> library it is possible to
+      detect which features a browser supports</li>
+    <li>Different wasm binaries have to be loaded for each feature combination</li>
+  </ul>
 </section>
