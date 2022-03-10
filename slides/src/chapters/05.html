@@ -1,3 +1,33 @@
 <section class="deck-slide">
     <h1>WASI</h1>
 </section>
+<section>
+    <h2>Wasm outside of browser</h2>
+    <p>Introduction: "Wasm is designed as a portable compilation target"</p>
+    <p>This means that WebAssembly can be run outside of the browser</p>
+</section>
+<section>
+    <h2>Wasm runtimes</h2>
+    <ul>
+        <li><a href="https://wasmtime.dev">wasmtime</a></li>
+        <li><a href="https://wasmer.io">wasmer</a></li>
+    </ul>
+</section>
+<section>
+    <h2>Wasm security</h2>
+    <ul>
+        <li>Wasm has a strict security model</li>
+        <li>Wasm modules run in a sandboxed environment isolated from the host</li>
+    </ul>
+    <a href="https://webassembly.org/docs/security/">More details about Wasm security</a>
+    <p></p>
+</section>
+<section>
+    <p>What does this mean for execution outside of the browser?</p>
+    <p>by default no access to:</p>
+    <ul>
+        <li>file system</li>
+        <li>network</li>
+    </ul>
+    https://github.com/bytecodealliance/wasmtime/blob/main/docs/WASI-tutorial.md
+</section>
