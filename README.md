@@ -18,3 +18,16 @@ Build and serve locally (needs the [fastly CLI](https://developer.fastly.com/ref
 
 Publish to fastly:
 `fastly compute publish`
+
+### WASI Security demo
+Make sure wasmtime is installed: [install](https://wasmtime.dev)
+
+Build the demo:
+```bash
+cargo build
+```
+
+Then run the binary with wasmtime:
+```bash
+wasmtime target/wasm32-wasi/debug/wasi-security.wasm 
+```
