@@ -22,4 +22,4 @@ if (window.location.href.endsWith("/")) {
   showToc();
 }
 
-setTitle("state of webassembly");
+setTitle("State of WebAssembly");
