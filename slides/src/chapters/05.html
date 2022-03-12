@@ -7,6 +7,14 @@
     <p>This means that WebAssembly can be run outside of the browser</p>
 </section>
 <section>
+    <h2>Generalized runtime</h2>
+    <ul>
+        <li>Generalized runtime for many input languages</li>
+        <li>In idea similar to Java ("write once run anywhere")</li>
+        <li>but: native support for many input languages and capability-based security</li>
+    </ul>
+</section>
+<section>
     <h2>Wasm runtimes</h2>
     <ul>
         <li><a href="https://wasmtime.dev">wasmtime</a></li>
@@ -28,6 +36,87 @@
     <ul>
         <li>file system</li>
         <li>network</li>
+        <li>system calls</li>
     </ul>
-    https://github.com/bytecodealliance/wasmtime/blob/main/docs/WASI-tutorial.md
+</section>
+<section>
+    <pre>
+        <code class="hljs rust" data-trim contenteditable data-noescape>
+            #[wasm_bindgen]
+            fn main() {
+                let text = std::fs::read_to_string("input.txt")
+                    .expect("Could not read file");
+                println!("{}", text);
+            }
+        </code>
+    </pre>
+</section>
+<section>
+    <pre>
+        <code class="hljs bash" data-trim contenteditable data-noescape>
+            ❯ wasmtime wasi-security.wasm
+            thread 'main' panicked at
+                'Could not read file: Custom { kind: Uncategorized,
+                 error: "failed to find a pre-opened file descriptor
+                 through which \"input.txt\" could be opened" }',
+                 src\main.rs:3:10
+            note: run with `RUST_BACKTRACE=1` environment variable
+            to display a backtrace
+            Error: failed to run main module
+                `target/wasm32-wasi/debug/wasi-security.wasm`
+        </code>
+    </pre>
+</section>
+<section>
+    <ul>
+        <li>WASI follows a capability-based security approach</li>
+        <li>Possible to finely tune what a module has access to</li>
+    </ul>
+</section>
+<section>
+    <p>Give the module access to the working directory (--dir .)</p>
+    <pre>
+        <code class="hljs bash" data-trim contenteditable data-noescape>
+            ❯ wasmtime wasi-security.wasm --dir .
+            Hello from the text file!
+        </code>
+    </pre>
+</section>
+<section>
+    <section>
+        <h2>WASI use cases</h2>
+        <p>What are examples of Wasm outside of the browser (with WASI)?</p>
+    </section>
+    <section>
+        <h2>fastly Compute@Edge</h2>
+        <img src="../../img/fastly.png" class="badge-container" width="10%"/>
+        <ul>
+            <li>Run a WASI workload on fastly's Compute@Edge platform</li>
+            <li>example: use the same word cloud code and deploy it serverless to the cloud</li>
+        </ul>
+        <aside class="notes">
+            If there is enough time we can show the sample heere
+        </aside>
+    </section>
+    <section>
+        <h2>Krustlet - kubelet</h2>
+        <img src="../../img/krustlet.svg" class="badge-container" width="20%"/>
+        <ul>
+            <li>Enables a Kubernetes node to run WASI workloads</li>
+            <li>The cluster can then run Wasm modules in addition to containers</li>
+        </ul>
+    </section>
+    <section>
+        <h2>Krustlet - kubelet</h2>
+        <img src="../../img/krustlet.svg" class="badge-container" width="20%"/>
+        <img src="../../img/docker_wasm_quote.png" />
+    </section>
+    <section>
+        <h2>Plugin for Flight Simulator</h2>
+        <img src="../../img/msfs_logo.png" width="20%"/>
+        <p>
+            The 2020-released new Flight Simulator by Microsoft uses a Wasm-based plugin mechanism instead of loading
+            dynamic shared libraries (.dll)
+        </p>
+    </section>
 </section>
