@@ -5,7 +5,6 @@ import chapter3 from "./chapters/03.html?raw";
 import chapter4 from "./chapters/04.html?raw";
 import chapter5 from "./chapters/05.html?raw";
 import chapter6 from "./chapters/06.html?raw";
-import chapter7 from "./chapters/07.html?raw";
 import { setupDeck } from "./deck";
 import { hideToc } from "./toc";
 
@@ -17,18 +16,9 @@ const chapterSources = [
   "./chapters/04.html?raw",
   "./chapters/05.html?raw",
   "./chapters/06.html?raw",
-  "./chapters/07.html?raw",
 ];
 
-const chapters = [
-  chapter1,
-  chapter2,
-  chapter3,
-  chapter4,
-  chapter5,
-  chapter6,
-  chapter7,
-];
+const chapters = [chapter1, chapter2, chapter3, chapter4, chapter5, chapter6];
 
 function insertToc(toc) {
   document.querySelector(".toc").innerHTML = `<div>${toc}</div>`;
