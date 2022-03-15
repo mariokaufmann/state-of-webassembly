@@ -7,7 +7,7 @@
     font-family: 'Zuehlke', 'sans-serif';
     display: flex;
     background-size: cover;
-    background: url("/assets/img/bg.jpg") no-repeat center center;
+    background: url("/state-of-webassembly/assets/img/bg.jpg") no-repeat center center;
     align-content: center;
     justify-content: left;
     flex-wrap: wrap;
@@ -29,7 +29,7 @@
     min-height: 100px;
     max-width: 200px;
     max-height: 200px;
-    background: url("/assets/img/zuehlke_logo.jpg");
+    background: url("/state-of-webassembly/assets/img/zuehlke_logo.jpg");
     background-size: contain;
 }
 

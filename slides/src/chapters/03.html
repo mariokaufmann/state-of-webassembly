@@ -17,7 +17,7 @@
     <h2>Showcase app</h2>
     <p>Take set of 150k wine reviews from Twitter and generate a word cloud from a subset of the reviews with
         the most relevant words</p>
-    <img alt="word cloud wine reviews (wines from South America)" src="/assets/img/word-cloud/wordcloud_south_america.png" width="50%"/>
+    <img alt="word cloud wine reviews (wines from South America)" src="assets/img/word-cloud/wordcloud_south_america.png" width="50%"/>
 </section>
 <section>
     <h2>Why do it in the browser?</h2>
@@ -168,22 +168,22 @@
     </section>
     <section>
         <p>Use dev tools (performance tab)</p>
-        <img src="/assets/img/word-cloud/profiling1.png" />
+        <img src="assets/img/word-cloud/profiling1.png" />
     </section>
     <section>
         <p>Use dev tools (performance tab)</p>
-        <img src="/assets/img/word-cloud/profiling1.png" />
+        <img src="assets/img/word-cloud/profiling1.png" />
         <p class="tip">
             wasm runs slower when dev tools are open - except when profiling in performance tab!
         </p>
     </section>
     <section>
         <p>Find relevant function call</p>
-        <img src="/assets/img/word-cloud/profiling2.png" />
+        <img src="assets/img/word-cloud/profiling2.png" />
     </section>
     <section>
         <p>Not very readable unfortunately</p>
-        <img src="/assets/img/word-cloud/profiling3.png" />
+        <img src="assets/img/word-cloud/profiling3.png" />
     </section>
     <section>
         <p>Include debug symbols and disable optimizations in the wasm build</p>
@@ -224,11 +224,11 @@
 </section>
 <section>
     <p>Now we have a readable profiling session!</p>
-    <img src="/assets/img/word-cloud/profiling_alloc.png" />
+    <img src="assets/img/word-cloud/profiling_alloc.png" />
 </section>
 <section>
     <p>Zooming in, memory allocations seem to dominate</p>
-    <img src="/assets/img/word-cloud/profiling_alloc.png" />
+    <img src="assets/img/word-cloud/profiling_alloc.png" />
 </section>
 <section>
     <p>working in low level languages makes it possible to control when memory is allocated to some extent</p>
@@ -247,7 +247,7 @@
 </section>
 <section>
     <p>Let's use another tool - chrome://tracing</p>
-    <img src="/assets/img/word-cloud/tracing.png"  alt="Chrome tracing tools"/>
+    <img src="assets/img/word-cloud/tracing.png"  alt="Chrome tracing tools"/>
 </section>
 <section>
     <h2>Chrome tracing tools</h2>
@@ -257,7 +257,7 @@
     </ul>
 </section>
 <section>
-    <img src="/assets/img/word-cloud/tracing_results.png" />
+    <img src="assets/img/word-cloud/tracing_results.png" />
     <p>Large number of wasm.GrowMemory operations</p>
 </section>
 <section>
@@ -282,7 +282,7 @@
 </section>
 <section>
     <p>Success!</p>
-    <img src="/assets/img/word-cloud/chrome_preallocation.png" />
+    <img src="assets/img/word-cloud/chrome_preallocation.png" />
 </section>
 <section>
     <h2>Time needed for generating word cloud (wasm + preallocation)</h2>

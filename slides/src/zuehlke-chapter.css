@@ -12,7 +12,7 @@
 }
 
 .reveal .deck-slide.slide-background {
-    background: url("/assets/img/bg.jpg"), center, center;
+    background: url("/state-of-webassembly/assets/img/bg.jpg"), center, center;
     background-size: cover;
 }
 
@@ -57,7 +57,7 @@
     min-height: 100px;
     max-width: 200px;
     max-height: 200px;
-    background: url("/assets/img/zuehlke_logo.jpg");
+    background: url("/state-of-webassembly/assets/img/zuehlke_logo.jpg");
     background-size: contain;
 }
 
