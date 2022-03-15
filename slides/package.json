@@ -4,9 +4,9 @@
   "description": "",
   "private": true,
   "scripts": {
-    "dev:slides": "vite --base=/slides/ --port 3001",
+    "dev:slides": "vite --port 3001",
     "preview": "vite preview",
-    "build:slides": "vite build --base=/slides/"
+    "build:slides": "vite build && npx cpy assets dist"
   },
   "author": "Mario Kaufmann",
   "license": "ISC",
@@ -14,6 +14,7 @@
     "vite": "2.8.5"
   },
   "dependencies": {
+    "cpy-cli": "4.1.0",
     "highlight.js": "11.4.0",
     "marked": "4.0.12",
     "reveal.js": "4.3.0"

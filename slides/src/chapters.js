@@ -59,23 +59,26 @@ insertToc(toc);
 const [deepLinkHorizontalSlide, deepLinkVerticalSlide] = location.hash
   .split("/")
   .slice(1);
-const slideDeck = await setupDeck();
-if (deepLinkHorizontalSlide) {
-  slideDeck.slide(deepLinkHorizontalSlide, deepLinkVerticalSlide ?? 0);
-  hideToc();
-}
-attachEventListenersToTocChapters(slideDeck);
 
-// add hot reloading (in dev mode)
-// https://vitejs.dev/guide/api-hmr.html#hot-accept-cb
-if (import.meta.hot) {
-  // hot reload table of contents
-  import.meta.hot.accept(tocSource, (newRawToc) => insertToc(newRawToc));
+(async () => {
+  const slideDeck = await setupDeck();
+  if (deepLinkHorizontalSlide) {
+    slideDeck.slide(deepLinkHorizontalSlide, deepLinkVerticalSlide ?? 0);
+    hideToc();
+  }
+  attachEventListenersToTocChapters(slideDeck);
 
-  // hot reload chapters
-  import.meta.hot.accept(chapterSources, (newRawChapters) => {
-    document.querySelector(".slides").innerHTML = newRawChapters.join("");
-    slideDeck.sync();
-    slideDeck.getPlugin("highlight").hljs.highlightAll();
-  });
-}
+  // add hot reloading (in dev mode)
+  // https://vitejs.dev/guide/api-hmr.html#hot-accept-cb
+  if (import.meta.hot) {
+    // hot reload table of contents
+    import.meta.hot.accept(tocSource, (newRawToc) => insertToc(newRawToc));
+
+    // hot reload chapters
+    import.meta.hot.accept(chapterSources, (newRawChapters) => {
+      document.querySelector(".slides").innerHTML = newRawChapters.join("");
+      slideDeck.sync();
+      slideDeck.getPlugin("highlight").hljs.highlightAll();
+    });
+  }
+})();
