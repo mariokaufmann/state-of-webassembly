@@ -44,6 +44,65 @@
             <li class="fragment">Support is growing!</li>
         </ul>
     </section>
+    <section>
+        <h2>Track proposals</h2>
+        <p>
+            <a href="https://github.com/WebAssembly/proposals" target="_blank">Github Repository</a>
+        </p>
+    </section>
+</section>
+
+<section>
+    <section>
+        <h2>Interface</h2>
+    </section>
+    <section>
+        <h2>Memory</h2>
+        <ul>
+            <li>Only flat linear memory support</li>
+            <li class="fragment">No Garbage Collection except custom written</li>
+            <li class="fragment">Work in progress (Phase 2)</li>
+        </ul>
+    </section>
+    <section>
+        <h2>Types</h2>
+        <img alt="wasm interface types" src="../img/wasm-types.png">
+    </section>
+    <section>
+        <h2>How do we exchange other types?</h2>
+        <ul>
+            <li class="fragment">
+                Other types we have to pass the reference and read it directly from memory
+            </li>
+            <li class="fragment">
+                Compilers add "glue code"
+            </li>
+            <li class="fragment">We'll see that later</li>
+        </ul>
+    </section>
+    <section>
+        <h2>DOM</h2>
+        <ul>
+            <li>No DOM access from within wasm</li>
+            <li class="fragment">DOM API proposed for future version</li>
+        </ul>
+    </section>
+    <section>
+        <h2>GPU</h2>
+        <ul>
+            <li>No GPU access</li>
+            <li>Not planned right now</li>
+            <li>Follow the W3C <a href="https://github.com/gpuweb/gpuweb" target="_blank">gpuweb proposal</a></li>
+        </ul>
+    </section>
+</section>
+
+
+<section>
+    <h2>Minimal Example</h2>
+    <p>
+        <a href="https://localhost:28443" target="_blank">WebAssembly Studio</a>
+    </p>
 </section>
 
 <section>
@@ -123,47 +182,6 @@
 
 <section>
     <section>
-        <h2>Limitations</h2>
-    </section>
-    <section>
-        <h2>Memory</h2>
-        <ul>
-            <li>Only flat linear memory support</li>
-            <li class="fragment">No Garbage Collection except custom written</li>
-            <li class="fragment">Work in progress</li>
-        </ul>
-    </section>
-    <section>
-        <h2>DOM</h2>
-        <ul>
-            <li>No DOM access from within wasm</li>
-            <li class="fragment">DOM API proposed for future version</li>
-        </ul>
-    </section>
-    <section>
-        <h2>GPU</h2>
-        <ul>
-            <li>No GPU access</li>
-            <li>Not planned right now</li>
-            <li>Follow the W3C <a href="https://github.com/gpuweb/gpuweb" target="_blank">gpuweb proposal</a></li>
-        </ul>
-    </section>
-    <section>
-        <h2>Types</h2>
-        <img alt="wasm interface types" src="../img/wasm-types.png">
-    </section>
-    <section>
-        <h2>How do we exchange other types?</h2>
-        <ul>
-            <li class="fragment">
-                Other types we have to pass the reference and read it directly from memory
-            </li>
-            <li class="fragment">We'll see that later</li>
-        </ul>
-    </section>
-</section>
-<section>
-    <section>
         <h2>What is coming?</h2>
     </section>
     <section>
@@ -185,9 +203,8 @@
     <section>
         <h2>Exception Handling</h2>
         <ul>
-            <li>No support so far</li>
-            <li>Fairly challenging proposal (#2)</li>
-            <li>Currently proposing a generic concept of events</li>
+            <li>Support is in progress!</li>
+            <li>Fairly challenging proposal</li>
         </ul>
     </section>
     <section>
@@ -225,8 +242,8 @@
             </a>
         </li>
         <li>
-            <a href="https://blog.scottlogic.com/2018/07/20/wasm-future.html" target="_blank">
-                The future of WebAssembly by Colin Eberhardt
+            <a href="https://github.com/wasdk/WebAssemblyStudio" target="_blank">
+                WebAssembly Studio
             </a>
         </li>
         <li>
