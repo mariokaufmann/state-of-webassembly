@@ -96,7 +96,17 @@
     </ul>
 </section>
 <section>
-    <h2>js-sys & web-sys</h2>
+    <h2>js-sys & web-sys crates</h2>
+    <p>Bind to Web API & JS functions from Rust</p>
+    <pre>
+        <code class="hljs rust" data-trim contenteditable data-noescape>
+            fn log_time(step: &str, start_time: f64) {
+                let end_time = web_sys::window().unwrap()
+                    .performance().unwrap().now();
+                log_to_screen_wasm(&format!("{} after {}ms.", step,
+                    end_time - start_time));
+            }
+        </code>
 </section>
 <section>
     <h2>Processing function</h2>

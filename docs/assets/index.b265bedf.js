@@ -487,7 +487,17 @@ import{$ as h,R as p,a as g,b as f}from"./vendor.89915203.js";const w=function()
     </ul>
 </section>
 <section>
-    <h2>js-sys & web-sys</h2>
+    <h2>js-sys & web-sys crates</h2>
+    <p>Bind to Web API & JS functions from Rust</p>
+    <pre>
+        <code class="hljs rust" data-trim contenteditable data-noescape>
+            fn log_time(step: &str, start_time: f64) {
+                let end_time = web_sys::window().unwrap()
+                    .performance().unwrap().now();
+                log_to_screen_wasm(&format!("{} after {}ms.", step,
+                    end_time - start_time));
+            }
+        </code>
 </section>
 <section>
     <h2>Processing function</h2>
@@ -857,8 +867,10 @@ import{$ as h,R as p,a as g,b as f}from"./vendor.89915203.js";const w=function()
 <section>
     <h2>Wasm runtimes</h2>
     <ul>
-        <li><a href="https://wasmtime.dev">wasmtime</a></li>
-        <li><a href="https://wasmer.io">wasmer</a></li>
+        <li><a href="https://wasmtime.dev" target="_blank">wasmtime</a></li>
+        <img src="assets/img/wasmtime.png" width="20%"/>
+        <li><a href="https://wasmer.io" target="_blank">wasmer</a></li>
+        <img src="assets/img/wasmer.png" width="40%"/>
     </ul>
 </section>
 <section>
@@ -998,4 +1010,4 @@ import{$ as h,R as p,a as g,b as f}from"./vendor.89915203.js";const w=function()
         <li>Standards and runtimes are a moving target</li>
         <li>Many exciting use cases</li>
     </ul>
-</section>`;function A(){const t=new h(document.querySelector(".reveal"),{history:!0,plugins:[p,g,f]});return t.initialize().then(()=>(t.getPlugin("highlight").hljs.highlightAll(),t))}const x=[y,v,k,_,S,W];function I(t){document.querySelector(".toc").innerHTML=`<div>${t}</div>`}function C(t){const s=document.querySelectorAll(".toc section"),a=document.querySelectorAll(".reveal .slides > section.deck-slide"),o=document.querySelectorAll(".reveal .slides > section");s.forEach((n,e)=>{const i=a[e];if(!a){console.error(`Could not find deck slide for chapter ${e+1}`);return}o.forEach((d,u)=>{i===d&&n.addEventListener("click",()=>{m(),t.slide(u,0,0)})})})}const j=x.join("");document.querySelector(".slides-container").innerHTML=`<div class="reveal"><div class="slides">${j}</div></div>`;I(b);const[r,l]=location.hash.split("/").slice(1);(async()=>{const t=await A();r&&(t.slide(r,l!=null?l:0),m()),C(t)})();function T(t){document.querySelector("head title").textContent=t}document.querySelector(".home").addEventListener("click",()=>{c()});window.location.href.endsWith("/")&&c();T("State of WebAssembly");
+</section>`;function A(){const t=new h(document.querySelector(".reveal"),{history:!0,plugins:[p,g,f]});return t.initialize().then(()=>(t.getPlugin("highlight").hljs.highlightAll(),t))}const I=[y,v,k,_,S,W];function x(t){document.querySelector(".toc").innerHTML=`<div>${t}</div>`}function C(t){const s=document.querySelectorAll(".toc section"),a=document.querySelectorAll(".reveal .slides > section.deck-slide"),o=document.querySelectorAll(".reveal .slides > section");s.forEach((n,e)=>{const i=a[e];if(!a){console.error(`Could not find deck slide for chapter ${e+1}`);return}o.forEach((d,u)=>{i===d&&n.addEventListener("click",()=>{m(),t.slide(u,0,0)})})})}const j=I.join("");document.querySelector(".slides-container").innerHTML=`<div class="reveal"><div class="slides">${j}</div></div>`;x(b);const[r,l]=location.hash.split("/").slice(1);(async()=>{const t=await A();r&&(t.slide(r,l!=null?l:0),m()),C(t)})();function T(t){document.querySelector("head title").textContent=t}document.querySelector(".home").addEventListener("click",()=>{c()});window.location.href.endsWith("/")&&c();T("State of WebAssembly");
