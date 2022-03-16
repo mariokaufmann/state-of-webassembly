@@ -45,20 +45,24 @@
 </section>
 <section>
     <pre>
+        <code class="hljs txt" data-trim contenteditable data-noescape>
+            Hello from the text file!
+        </code><small>input.txt</small>
+    </pre>
+    <pre>
         <code class="hljs rust" data-trim contenteditable data-noescape>
-            #[wasm_bindgen]
             fn main() {
                 let text = std::fs::read_to_string("input.txt")
                     .expect("Could not read file");
                 println!("{}", text);
             }
-        </code>
+        </code><small>main.rs</small>
     </pre>
 </section>
 <section>
     <pre>
         <code class="hljs bash" data-trim contenteditable data-noescape>
-            ❯ wasmtime wasi-security.wasm
+            > wasmtime wasi-security.wasm
             thread 'main' panicked at
                 'Could not read file: Custom { kind: Uncategorized,
                  error: "failed to find a pre-opened file descriptor
@@ -81,7 +85,7 @@
     <p>Give the module access to the working directory (--dir .)</p>
     <pre>
         <code class="hljs bash" data-trim contenteditable data-noescape>
-            ❯ wasmtime wasi-security.wasm --dir .
+            > wasmtime wasi-security.wasm --dir .
             Hello from the text file!
         </code>
     </pre>
@@ -107,7 +111,11 @@
             <li>example: use the same word cloud code and deploy it serverless to the cloud</li>
         </ul>
         <aside class="notes">
-            If there is enough time we can show the sample heere
+            If there is enough time we can show the sample here
+            https://github.com/CurrySoftware/rust-stemmers
+            https://github.com/snowballstem/snowball
+            https://manage.fastly.com/compute/services/2H1IhwStWxemRvkd4Dk8gM
+            curl https://rapidly-funny-man.edgecompute.app/api/stemming -H "Content-Type: application/json" --data '["reading", "horses", "blue", "read"]'
         </aside>
     </section>
     <section>
@@ -121,7 +129,7 @@
     <section>
         <h2>Krustlet - kubelet</h2>
         <img src="assets/img/krustlet.svg" class="badge-container" width="20%"/>
-        <img src="assets/img/docker_wasm_quote.png" />
+        <img src="assets/img/docker_wasm_quote.png"/>
     </section>
     <section>
         <h2>Plugin for Flight Simulator</h2>

@@ -1,4 +1,4 @@
-import{$ as h,R as p,a as g,b as f}from"./vendor.89915203.js";const w=function(){const s=document.createElement("link").relList;if(s&&s.supports&&s.supports("modulepreload"))return;for(const n of document.querySelectorAll('link[rel="modulepreload"]'))o(n);new MutationObserver(n=>{for(const e of n)if(e.type==="childList")for(const i of e.addedNodes)i.tagName==="LINK"&&i.rel==="modulepreload"&&o(i)}).observe(document,{childList:!0,subtree:!0});function a(n){const e={};return n.integrity&&(e.integrity=n.integrity),n.referrerpolicy&&(e.referrerPolicy=n.referrerpolicy),n.crossorigin==="use-credentials"?e.credentials="include":n.crossorigin==="anonymous"?e.credentials="omit":e.credentials="same-origin",e}function o(n){if(n.ep)return;n.ep=!0;const e=a(n);fetch(n.href,e)}};w();function c(){document.querySelector(".toc").classList.remove("toc-hidden")}function d(){document.querySelector(".toc").classList.add("toc-hidden")}var b=`<header>
+import{$ as h,R as p,a as g,b as f}from"./vendor.89915203.js";const w=function(){const s=document.createElement("link").relList;if(s&&s.supports&&s.supports("modulepreload"))return;for(const n of document.querySelectorAll('link[rel="modulepreload"]'))o(n);new MutationObserver(n=>{for(const e of n)if(e.type==="childList")for(const i of e.addedNodes)i.tagName==="LINK"&&i.rel==="modulepreload"&&o(i)}).observe(document,{childList:!0,subtree:!0});function a(n){const e={};return n.integrity&&(e.integrity=n.integrity),n.referrerpolicy&&(e.referrerPolicy=n.referrerpolicy),n.crossorigin==="use-credentials"?e.credentials="include":n.crossorigin==="anonymous"?e.credentials="omit":e.credentials="same-origin",e}function o(n){if(n.ep)return;n.ep=!0;const e=a(n);fetch(n.href,e)}};w();function c(){document.querySelector(".toc").classList.remove("toc-hidden")}function m(){document.querySelector(".toc").classList.add("toc-hidden")}var b=`<header>
     <h1>State of WebAssembly</h1>
     <h2>
         <span class="nowrap">Patrick Walther & Mario Kaufmann</span>
@@ -408,7 +408,8 @@ import{$ as h,R as p,a as g,b as f}from"./vendor.89915203.js";const w=function()
     <h2>Showcase app</h2>
     <p>Take set of 150k wine reviews from Twitter and generate a word cloud from a subset of the reviews with
         the most relevant words</p>
-    <img alt="word cloud wine reviews (wines from South America)" src="assets/img/word-cloud/wordcloud_south_america.png" width="50%"/>
+    <img alt="word cloud wine reviews (wines from South America)"
+         src="assets/img/word-cloud/wordcloud_south_america.png" width="50%"/>
 </section>
 <section>
     <h2>Why do it in the browser?</h2>
@@ -422,7 +423,10 @@ import{$ as h,R as p,a as g,b as f}from"./vendor.89915203.js";const w=function()
     <h4>Review for Quinta dos Avidagos 2011 Avidagos Red</h4>
     <ul>
         <li>Points: 87</li>
-        <li>Description: This is ripe and fruity, a wine that is smooth while still structured. Firm tannins are filled out with juicy red berry fruits and freshened with acidity. It's  already drinkable, although it will certainly be better from 2016.</li>
+        <li>Description: This is ripe and fruity, a wine that is smooth while still structured. Firm tannins are filled
+            out with juicy red berry fruits and freshened with acidity. It's already drinkable, although it will
+            certainly be better from 2016.
+        </li>
         <li>Variety: Portuguese Red</li>
         <li>Province: Douro</li>
         <li>Country: Portugal</li>
@@ -483,7 +487,10 @@ import{$ as h,R as p,a as g,b as f}from"./vendor.89915203.js";const w=function()
     </ul>
 </section>
 <section>
-    <p>Processing function</p>
+    <h2>js-sys & web-sys</h2>
+</section>
+<section>
+    <h2>Processing function</h2>
     <pre>
         <code class="hljs rust" data-trim contenteditable data-noescape>
             #[wasm_bindgen]
@@ -499,7 +506,7 @@ import{$ as h,R as p,a as g,b as f}from"./vendor.89915203.js";const w=function()
     <small></small>
 </section>
 <section>
-    <p>Word cloud function</p>
+    <h2>Word cloud function</h2>
     <small>Returns the most relevant words with an importance score</small>
     <pre>
         <code class="hljs rust" data-trim contenteditable data-noescape>
@@ -559,25 +566,25 @@ import{$ as h,R as p,a as g,b as f}from"./vendor.89915203.js";const w=function()
     </section>
     <section>
         <p>Use dev tools (performance tab)</p>
-        <img src="assets/img/word-cloud/profiling1.png" />
+        <img src="assets/img/word-cloud/profiling1.png"/>
     </section>
     <section>
         <p>Use dev tools (performance tab)</p>
-        <img src="assets/img/word-cloud/profiling1.png" />
+        <img src="assets/img/word-cloud/profiling1.png"/>
         <p class="tip">
             wasm runs slower when dev tools are open - except when profiling in performance tab!
         </p>
     </section>
     <section>
         <p>Find relevant function call</p>
-        <img src="assets/img/word-cloud/profiling2.png" />
+        <img src="assets/img/word-cloud/profiling2.png"/>
     </section>
     <section>
         <p>Not very readable unfortunately</p>
-        <img src="assets/img/word-cloud/profiling3.png" />
+        <img src="assets/img/word-cloud/profiling3.png"/>
     </section>
     <section>
-        <p>Include debug symbols and disable optimizations in the wasm build</p>
+        <p>Include debug symbols and disable <br/>optimizations in the wasm build</p>
         <pre>
         <code class="hljs toml" data-trim contenteditable data-noescape>
             [profile.release]
@@ -615,11 +622,11 @@ import{$ as h,R as p,a as g,b as f}from"./vendor.89915203.js";const w=function()
 </section>
 <section>
     <p>Now we have a readable profiling session!</p>
-    <img src="assets/img/word-cloud/profiling_alloc.png" />
+    <img src="assets/img/word-cloud/profiling_alloc.png"/>
 </section>
 <section>
     <p>Zooming in, memory allocations seem to dominate</p>
-    <img src="assets/img/word-cloud/profiling_alloc.png" />
+    <img src="assets/img/word-cloud/profiling_alloc.png"/>
 </section>
 <section>
     <p>working in low level languages makes it possible to control when memory is allocated to some extent</p>
@@ -631,14 +638,18 @@ import{$ as h,R as p,a as g,b as f}from"./vendor.89915203.js";const w=function()
     <small>Making sure that the hash map does not need to grow when inserting the elements</small>
 </section>
 <section>
+    <h2>Chrome updated result</h2>
     <ul>
-        <li>Result: a bit faster in Chrome, but not substantially</li>
-        <li>Not possible to easily optimize all allocations (we don't know the dataset in advance)</li>
+        <li>A bit faster in Chrome (7.5s), but not substantially</li>
+        <li>Still much slower than the JS implementation</li>
+        <li>Not possible to easily optimize all allocations (data cleaning, words of unknown length, algorithm memory
+            efficiency)
+        </li>
     </ul>
 </section>
 <section>
     <p>Let's use another tool - chrome://tracing</p>
-    <img src="assets/img/word-cloud/tracing.png"  alt="Chrome tracing tools"/>
+    <img src="assets/img/word-cloud/tracing.png" alt="Chrome tracing tools"/>
 </section>
 <section>
     <h2>Chrome tracing tools</h2>
@@ -648,11 +659,19 @@ import{$ as h,R as p,a as g,b as f}from"./vendor.89915203.js";const w=function()
     </ul>
 </section>
 <section>
-    <img src="assets/img/word-cloud/tracing_results.png" />
+    <h2>Tracing session</h2>
+    <ul>
+        <li>Start recording wasm events</li>
+        <li>Process dataset again</li>
+        <li>Analyze wasm events</li>
+    </ul>
+</section>
+<section>
+    <img src="assets/img/word-cloud/tracing_results.png"/>
     <p>Large number of wasm.GrowMemory operations</p>
 </section>
 <section>
-    <h2>WebAssembly memory</h2>
+    <h2>Reminder: WebAssembly memory</h2>
     <ul>
         <li>wasm memory is a linear buffer</li>
         <li>Every time it is grown the memory potentially needs to be relocated</li>
@@ -669,26 +688,31 @@ import{$ as h,R as p,a as g,b as f}from"./vendor.89915203.js";const w=function()
             }
         </code>
     </pre>
-    <small>In a real application this number wouldn't be constant</small>
+    <small>
+        Preallocate memory and drop it immediately again, therefore making sure that we have one big wasm grow
+        operation.
+        In a real application how much memory is allocated wouldn't be constant
+    </small>
 </section>
 <section>
     <p>Success!</p>
-    <img src="assets/img/word-cloud/chrome_preallocation.png" />
+    <img src="assets/img/word-cloud/chrome_preallocation.png"/>
 </section>
 <section>
     <h2>Time needed for generating word cloud (wasm + preallocation)</h2>
     <ul>
         <li>Safari: 1.5-2.0s</li>
         <li>Firefox: 1.5-2.0s</li>
-        <li>Chrome: 1.5-2.0s</li>
+        <li><b>Chrome: 1.5-2.0s</b></li>
     </ul>
-    <small>Safari and Firefox roughly the same, Chrome now also in the same area.</small>
 </section>
 <section>
     <h2>Side note: debugging</h2>
     <ul>
         <li>Debugging not very mature yet</li>
         <li>With wasm-bindgen, direct debugging is not yet supported</li>
+        <li>DWARF debugging symbols get stripped from binary</li>
+        <li>It can work for certain combinations of toolchains and languages (e.g. C + emscripten)</li>
     </ul>
 </section>
 <section>
@@ -861,20 +885,24 @@ import{$ as h,R as p,a as g,b as f}from"./vendor.89915203.js";const w=function()
 </section>
 <section>
     <pre>
+        <code class="hljs txt" data-trim contenteditable data-noescape>
+            Hello from the text file!
+        </code><small>input.txt</small>
+    </pre>
+    <pre>
         <code class="hljs rust" data-trim contenteditable data-noescape>
-            #[wasm_bindgen]
             fn main() {
                 let text = std::fs::read_to_string("input.txt")
                     .expect("Could not read file");
                 println!("{}", text);
             }
-        </code>
+        </code><small>main.rs</small>
     </pre>
 </section>
 <section>
     <pre>
         <code class="hljs bash" data-trim contenteditable data-noescape>
-            \u276F wasmtime wasi-security.wasm
+            > wasmtime wasi-security.wasm
             thread 'main' panicked at
                 'Could not read file: Custom { kind: Uncategorized,
                  error: "failed to find a pre-opened file descriptor
@@ -897,7 +925,7 @@ import{$ as h,R as p,a as g,b as f}from"./vendor.89915203.js";const w=function()
     <p>Give the module access to the working directory (--dir .)</p>
     <pre>
         <code class="hljs bash" data-trim contenteditable data-noescape>
-            \u276F wasmtime wasi-security.wasm --dir .
+            > wasmtime wasi-security.wasm --dir .
             Hello from the text file!
         </code>
     </pre>
@@ -923,7 +951,11 @@ import{$ as h,R as p,a as g,b as f}from"./vendor.89915203.js";const w=function()
             <li>example: use the same word cloud code and deploy it serverless to the cloud</li>
         </ul>
         <aside class="notes">
-            If there is enough time we can show the sample heere
+            If there is enough time we can show the sample here
+            https://github.com/CurrySoftware/rust-stemmers
+            https://github.com/snowballstem/snowball
+            https://manage.fastly.com/compute/services/2H1IhwStWxemRvkd4Dk8gM
+            curl https://rapidly-funny-man.edgecompute.app/api/stemming -H "Content-Type: application/json" --data '["reading", "horses", "blue", "read"]'
         </aside>
     </section>
     <section>
@@ -937,7 +969,7 @@ import{$ as h,R as p,a as g,b as f}from"./vendor.89915203.js";const w=function()
     <section>
         <h2>Krustlet - kubelet</h2>
         <img src="assets/img/krustlet.svg" class="badge-container" width="20%"/>
-        <img src="assets/img/docker_wasm_quote.png" />
+        <img src="assets/img/docker_wasm_quote.png"/>
     </section>
     <section>
         <h2>Plugin for Flight Simulator</h2>
@@ -966,4 +998,4 @@ import{$ as h,R as p,a as g,b as f}from"./vendor.89915203.js";const w=function()
         <li>Standards and runtimes are a moving target</li>
         <li>Many exciting use cases</li>
     </ul>
-</section>`;function A(){const t=new h(document.querySelector(".reveal"),{history:!0,plugins:[p,g,f]});return t.initialize().then(()=>(t.getPlugin("highlight").hljs.highlightAll(),t))}const I=[y,v,k,_,S,W];function x(t){document.querySelector(".toc").innerHTML=`<div>${t}</div>`}function C(t){const s=document.querySelectorAll(".toc section"),a=document.querySelectorAll(".reveal .slides > section.deck-slide"),o=document.querySelectorAll(".reveal .slides > section");s.forEach((n,e)=>{const i=a[e];if(!a){console.error(`Could not find deck slide for chapter ${e+1}`);return}o.forEach((u,m)=>{i===u&&n.addEventListener("click",()=>{d(),t.slide(m,0,0)})})})}const j=I.join("");document.querySelector(".slides-container").innerHTML=`<div class="reveal"><div class="slides">${j}</div></div>`;x(b);const[r,l]=location.hash.split("/").slice(1);(async()=>{const t=await A();r&&(t.slide(r,l!=null?l:0),d()),C(t)})();function T(t){document.querySelector("head title").textContent=t}document.querySelector(".home").addEventListener("click",()=>{c()});window.location.href.endsWith("/")&&c();T("State of WebAssembly");
+</section>`;function A(){const t=new h(document.querySelector(".reveal"),{history:!0,plugins:[p,g,f]});return t.initialize().then(()=>(t.getPlugin("highlight").hljs.highlightAll(),t))}const x=[y,v,k,_,S,W];function I(t){document.querySelector(".toc").innerHTML=`<div>${t}</div>`}function C(t){const s=document.querySelectorAll(".toc section"),a=document.querySelectorAll(".reveal .slides > section.deck-slide"),o=document.querySelectorAll(".reveal .slides > section");s.forEach((n,e)=>{const i=a[e];if(!a){console.error(`Could not find deck slide for chapter ${e+1}`);return}o.forEach((d,u)=>{i===d&&n.addEventListener("click",()=>{m(),t.slide(u,0,0)})})})}const j=x.join("");document.querySelector(".slides-container").innerHTML=`<div class="reveal"><div class="slides">${j}</div></div>`;I(b);const[r,l]=location.hash.split("/").slice(1);(async()=>{const t=await A();r&&(t.slide(r,l!=null?l:0),m()),C(t)})();function T(t){document.querySelector("head title").textContent=t}document.querySelector(".home").addEventListener("click",()=>{c()});window.location.href.endsWith("/")&&c();T("State of WebAssembly");

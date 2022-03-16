@@ -236,7 +236,7 @@
 
 .reveal .slides section .tip::before {
     content: ' ';
-    background: url(./img/light-bulb.svg) no-repeat;
+    background: url(/state-of-webassembly/assets/img/light-bulb.svg) no-repeat;
     background-size: contain;
     display: block;
     min-width: 50px;
