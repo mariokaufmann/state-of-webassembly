@@ -4,9 +4,9 @@
   "description": "",
   "private": true,
   "scripts": {
-    "dev:slides": "vite --port 3001",
+    "dev:slides": "vite --port 3001 --base /state-of-webassembly/",
     "preview": "vite preview",
-    "build:slides": "vite build && npx cpy assets dist"
+    "build:slides": "vite build --base /state-of-webassembly/ && node copyBuild.mjs"
   },
   "author": "Mario Kaufmann",
   "license": "ISC",
@@ -14,7 +14,7 @@
     "vite": "2.8.5"
   },
   "dependencies": {
-    "cpy-cli": "4.1.0",
+    "cpy" : "9.0.1",
     "highlight.js": "11.4.0",
     "marked": "4.0.12",
     "reveal.js": "4.3.0"
